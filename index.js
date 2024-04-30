@@ -11,12 +11,15 @@ import {
 //import{LOCAL_API as URL} from "./settings.js"
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
+import { initBudget } from "./pages/budgetPage/budgetPage.js";
 
 let templates = {};
 
 window.addEventListener("load", async () => {
   templates.templateAbout = await loadTemplate("./pages/aboutPage/aboutPage.html");
   templates.templateNotFound = await loadTemplate("./pages/notFound/notFound.html");
+  templates.templateBudget = await loadTemplate("./pages/budgetPage/budgetPage.html");
+
 
   adjustForMissingHash();
 
@@ -25,6 +28,7 @@ window.addEventListener("load", async () => {
   console.log("routehandler done");
 });
 
+//debug
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
   alert(
     "Error: " +
@@ -58,6 +62,10 @@ async function routeHandler() {
         renderTemplate(templates.templateAbout, "content");
         testEverything();
       },
+      "/budget": () => {
+        renderTemplate(templates.templateBudget, "content");
+        initBudget();
+      }
     });
 
   console.log("rolehandler done")
