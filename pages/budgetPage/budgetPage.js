@@ -3,36 +3,15 @@
 
     export function initBudget() {
         console.log('==>> budgetpage.js Hello from here');
+        fetchCategories();
         fetchEarnings(username);
-    }
-    const username = "Ferhat";
+        }
+
+
+    const username = "Ferhat"; //skal ændres til at hente username fra localstorage
     var totalEarnings = 0;
-
-    async function fetchCategories() {
-
-        const options = makeOptions("GET", '', false)
-
-        try {
-            const categories = await fetch(URL + '/categories/')
-                .then(handleHttpErrors)
-        } catch (error) {
-            console.log("There was a problem with the fetch operation: " + error.message);
-        }
-
-    }
-
-    // Function to fetch categories from the API
-    async function fetchEarnings(username) {
-        const options = makeOptions("GET", '', false); // Ensure that makeOptions is properly defined somewhere in your code
-
-        try {
-            const earnings = await fetch(URL + '/earnings/user/' + username, options)
-                .then(handleHttpErrors); // Ensure that handleHttpErrors is properly defined to handle the response
-            renderEarnings(earnings);
-        } catch (error) {
-            console.error("There was a problem with the fetch operation: " + error.message);
-        }
-    }
+    let earningsCategories = [];
+    let expenseCategories = [];
 
     function renderEarnings(earningsData) {
         const earningsContainer = document.getElementById('earnings-category');
@@ -46,8 +25,19 @@
             categories[earning.categoryName].push(earning);
         });
     
-        // Build HTML content for each category
         let htmlContent = '';
+
+        htmlContent += `<div class="input-group">
+        <select class="form-select" id="earningCategorySelect" aria-label="Example select with button addon">
+          <option selected>Choose...</option>`;
+        earningsCategories.forEach(cat => {
+            htmlContent += `<option value="${cat.categoryId}">${cat.name}</option>`;
+        });
+        htmlContent += `</select>
+        <button class="btn btn-outline-secondary" type="button" id="create-category-button">Create Category</button>
+        </div>`;
+        
+        // Build HTML content for each category
         for (let categoryName in categories) {
             htmlContent += '<h3 class="pt-3">' + categoryName + '</h3>'; // Category name header
             categories[categoryName].forEach(earning => {
@@ -62,31 +52,46 @@
             </div>`;
           
         }
-        // Append a single save button at the end
+        // Tilføj en knap til at gemme alle earnings
         htmlContent += `<hr><br><button id="save-all-button" class="btn btn-primary">Save All</button>`;
     
         earningsContainer.innerHTML = htmlContent;
         attachEventListeners();
         updateIncomeTotal();
+    }        
+
+    async function fetchCategories() {
+        const options = makeOptions("GET", '', false);
+    
+        try {
+            const response = await fetch(URL + '/categories/', options);
+            const categories = await handleHttpErrors(response);
+            earningsCategories = categories.filter(category => category.type === 'earning');
+            expenseCategories = categories.filter(category => category.type === 'expense');
+    
+            // Example usage: Render these categories or handle them as needed
+            console.log('Earnings Categories:', earningsCategories);
+            console.log('Expense Categories:', expenseCategories);
+    
+        } catch (error) {
+            console.error("There was a problem with the fetch operation: " + error.message);
+        }
     }
     
-    
-    function attachEventListeners() {
-        const saveButton = document.getElementById('save-all-button');
-        saveButton.addEventListener('click', saveAllEarnings);
+    async function fetchEarnings(username) {
+        const options = makeOptions("GET", '', false); 
 
-        //const addCategoryButton = document.getElementById('add-category');
-        //addCategoryButton.addEventListener('click', addCategory);
-
-        const addSubcategoryButtons = document.querySelectorAll('.add-subcategory');
-        addSubcategoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                addSubcategory(this);
-            });
-        });
+        try {
+            const earnings = await fetch(URL + '/earnings/user/' + username, options)
+                .then(handleHttpErrors); 
+            renderEarnings(earnings);
+        } catch (error) {
+            console.error("There was a problem with the fetch operation: " + error.message);
+        }
     }
+
     
-    function saveAllEarnings() {
+    function saveAllEarnings(){
         const earningsInputs = document.querySelectorAll('[id^="subcat-"]');
         const earnings = Array.from(earningsInputs).map(input => ({
             username: username,
@@ -95,9 +100,6 @@
         }));
 
         console.log('Saving all earnings by subcategory:', earnings);
-        saveEarnings(earnings);
-    }
-    function saveEarnings(earnings){
         const options = makeOptions("POST", earnings, true);
         fetch(URL + '/earnings/addEarnings', options)
             .then(handleHttpErrors)
@@ -110,22 +112,29 @@
             });
 
     }    
-    function updateIncomeTotal() {
-        const incomeTotal = document.getElementById('income-total');
-        incomeTotal.value = totalEarnings;
-        totalEarnings = 0;
-    }
-
 
     function addSubcategory(button) {
-        const addSubcategoryInput = button.previousElementSibling;
-        const categoryId = addSubcategoryInput.dataset.categoryId; // Now this should work correctly
+        const subcategoryInput = button.previousElementSibling;
+        const categoryId = subcategoryInput.dataset.categoryId;
+        const subcategoryName = subcategoryInput.value.trim();
+    
+        if (!categoryId || !subcategoryName) {
+            console.error('Category ID or subcategory name is missing.');
+            return;
+        }
+    
         const subcategory = {
             categoryId: categoryId,
-            name: addSubcategoryInput.value,
+            name: subcategoryName,
             username: username
         };
 
+        console.log('Adding a subcategory...' + subcategory.name);
+        console.log('Category ID: ' + categoryId);
+        postSubcategory(subcategory);
+    }
+
+    function postSubcategory(subcategory) {
         const options = makeOptions("POST", subcategory, false);
         fetch(URL + '/subcategories/addSubcategory', options)
             .then(handleHttpErrors)
@@ -136,9 +145,46 @@
             .catch(error => {
                 console.error('There was a problem adding the subcategory:', error);
             });
-    
-        console.log('Adding a subcategory...' + subcategory.name);
-        console.log('Category ID: ' + categoryId);
+        console.log('Adding subcategory:', subcategory.name, 'to category ID:', subcategory.categoryId);
     }
 
+    function addCategory() {
+        const categorySelect = document.getElementById('earningCategorySelect');
+    const categoryId = categorySelect.value;
+
+    if (!categoryId) {
+        console.error('No category selected.');
+        return;
+    }
+
+    const subcategory = {
+        categoryId: categoryId,
+        name: 'New Subcategory',
+        username: username
+    };
+
+    postSubcategory(subcategory);
+    console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
+    }
+
+    function attachEventListeners() {
+        const saveButton = document.getElementById('save-all-button');
+        saveButton.addEventListener('click', saveAllEarnings);
+        
+        const addCategoryButton = document.getElementById('create-category-button');
+        addCategoryButton.addEventListener('click', addCategory);
+
+        const addSubcategoryButtons = document.querySelectorAll('.add-subcategory');
+        addSubcategoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                addSubcategory(this);
+            });
+        });
+    }
+
+    function updateIncomeTotal() {
+        const incomeTotal = document.getElementById('income-total');
+        incomeTotal.value = totalEarnings;
+        totalEarnings = 0;
+    }
     
