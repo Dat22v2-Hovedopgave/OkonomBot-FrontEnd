@@ -15,7 +15,6 @@
         try {
             const categories = await fetch(URL + '/categories/')
                 .then(handleHttpErrors)
-            renderCategories(categories);
         } catch (error) {
             console.log("There was a problem with the fetch operation: " + error.message);
         }
@@ -49,29 +48,18 @@
     
         // Build HTML content for each category
         let htmlContent = '';
-        htmlContent += `<div class="input-group mb-3">
-        <select class="form-select" id="inputGroupSelect02">
-          <option selected>add category...</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
-        <label class="input-group-text" for="inputGroupSelect02">Options</label>
-      </div>`;
-
         for (let categoryName in categories) {
             htmlContent += '<h3 class="pt-3">' + categoryName + '</h3>'; // Category name header
             categories[categoryName].forEach(earning => {
                 htmlContent += '<h6>' + earning.subcategoryName + " Subcategory ID: " + earning.subcategoryId + '</h6>'; // Subcategory name
-                htmlContent += '<input type="text" class="form-control mb-3" value="' + earning.amount + '" id="subcat-' + earning.subcategoryId + '">';
+                htmlContent += '<input type="text" class="form-control mb-3" value="' + earning.amount + '" id="subcat-' + earning.subcategoryId + '" data-category-id="' + earning.categoryId + '">'; // Add data-category-id attribute
                 totalEarnings += earning.amount;
             });
             
             htmlContent += `<div class="input-group input-group-sm mb-3">
-            <input type="text" class="form-control" placeholder="type..." aria-describedby="add-subcategory">
-            <button class="btn btn-outline-secondary" type="button" id="add-subcategory">Add subcategory</button>
-          </div>
-          `;
+            <input type="text" class="form-control" placeholder="type..." aria-describedby="add-subcategory" data-category-id="${categories[categoryName][0].categoryId}">
+            <button class="btn btn-outline-secondary add-subcategory" type="button">Add subcategory</button>
+            </div>`;
           
         }
         // Append a single save button at the end
@@ -90,8 +78,12 @@
         //const addCategoryButton = document.getElementById('add-category');
         //addCategoryButton.addEventListener('click', addCategory);
 
-        const addSubcategoryButton = document.getElementById('add-subcategory');
-        addSubcategoryButton.addEventListener('click', addSubcategory);
+        const addSubcategoryButtons = document.querySelectorAll('.add-subcategory');
+        addSubcategoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                addSubcategory(this);
+            });
+        });
     }
     
     function saveAllEarnings() {
@@ -125,26 +117,28 @@
     }
 
 
-    function addSubcategory() {
-
-        const addSubcategoryInput = document.getElementById('add-subcategory').previousElementSibling;
+    function addSubcategory(button) {
+        const addSubcategoryInput = button.previousElementSibling;
+        const categoryId = addSubcategoryInput.dataset.categoryId; // Now this should work correctly
         const subcategory = {
-            categoryId: 1,
+            categoryId: categoryId,
             name: addSubcategoryInput.value,
             username: username
         };
 
-        // const options = makeOptions("POST", subcategory, false);
-        // fetch(URL + '/subcategories/addSubcategory', options)
-        //     .then(handleHttpErrors)
-        //     .then(response => {
-        //         console.log('Subcategory added successfully:', response);
-        //         fetchEarnings(username);
-        //     })
-        //     .catch(error => {
-        //         console.error('There was a problem adding a subcategory:', error);
-        //     });
-        console.log('Adding a subcategory...' + subcategory.subcategoryName);
+        const options = makeOptions("POST", subcategory, false);
+        fetch(URL + '/subcategories/addSubcategory', options)
+            .then(handleHttpErrors)
+            .then(response => {
+                console.log('Subcategory added successfully:', response);
+                fetchEarnings(username);
+            })
+            .catch(error => {
+                console.error('There was a problem adding the subcategory:', error);
+            });
+    
+        console.log('Adding a subcategory...' + subcategory.name);
+        console.log('Category ID: ' + categoryId);
     }
 
     
