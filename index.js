@@ -13,6 +13,7 @@ import {
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initBudget } from "./pages/budgetPage/budgetPage.js";
 import { initLogin } from "./pages/loginPage/loginPage.js";
+import { initSignIn } from "./pages/signInPage/signInPage.js";
 
 let templates = {};
 
@@ -21,6 +22,7 @@ window.addEventListener("load", async () => {
   templates.templateNotFound = await loadTemplate("./pages/notFound/notFound.html");
   templates.templateBudget = await loadTemplate("./pages/budgetPage/budgetPage.html");
   templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html");
+  templates.templateSignIn = await loadTemplate("./pages/signInPage/signInPage.html");
 
   adjustForMissingHash();
 
@@ -70,6 +72,10 @@ async function routeHandler() {
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
+      },
+      "/signIn": () => {
+        renderTemplate(templates.templateSignIn, "content");
+        initSignIn();
       }
     });
 
