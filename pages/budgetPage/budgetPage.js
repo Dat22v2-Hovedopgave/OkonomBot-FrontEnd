@@ -1,17 +1,18 @@
     import { LOCAL_API as URL } from "../../settings.js";
     import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 
-    export function initBudget() {
-        console.log('==>> budgetpage.js Hello from here');
-        fetchCategories();
-        fetchEarnings(username);
-        }
 
-
-    const username = "Ferhat"; //skal ændres til at hente username fra localstorage
+    
     var totalEarnings = 0;
     let earningsCategories = [];
     let expenseCategories = [];
+    
+    export function initBudget() {
+        console.log('==>> budgetpage.js Hello from here');
+        fetchCategories();
+        let username = localStorage.getItem("user"); //skal ændres til at hente username fra localstorage
+        fetchEarnings(username);
+    }
 
     function renderEarnings(earningsData) {
         const earningsContainer = document.getElementById('earnings-category');
@@ -150,7 +151,7 @@
 
     function addCategory() {
         const categorySelect = document.getElementById('earningCategorySelect');
-    const categoryId = categorySelect.value;
+        const categoryId = categorySelect.value;
 
     if (!categoryId) {
         console.error('No category selected.');

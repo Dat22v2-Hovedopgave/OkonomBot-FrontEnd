@@ -1,5 +1,7 @@
-import {LOCAL_API as API_URL} from "../../settings.js"
-import {handleHttpErrors, makeOptions} from "../../utils.js"
+import { LOCAL_API as API_URL } from "../../settings.js"
+import { handleHttpErrors, makeOptions } from "../../utils.js"
+import { defaultRoutes, roleHandler, routeHandler } from "../../index.js"
+
 const URL = API_URL + "/auth/login";
 
 export function initLogin() {
@@ -28,6 +30,7 @@ async function connectLogin(){
     const password = DOMPurify.sanitize(document.getElementById("password").value)
   
     const userDto = { "username":username, "password":password };
+    
     console.log(userDto);
   
     const options = makeOptions("POST",userDto,false);
@@ -40,9 +43,24 @@ async function connectLogin(){
   
       console.log(response);
 
-      window.router.navigate("/");
+      roleHandler();
+
+      window.router.navigate("/about");
     } catch (err) {
       //Make sure that the error ID is the correct one.
       document.getElementById("error").innerText = err.message
     }
-}
+
+  }
+    export async function logout(){
+    
+      document.getElementById("login").style.display="block"
+      document.getElementById("signIn").style.display="block"
+      document.getElementById("logout").style.display="none"
+      
+      localStorage.clear();
+
+      await routeHandler();
+
+      window.router.navigate("/about");
+    }

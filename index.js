@@ -12,7 +12,7 @@ import {
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initBudget } from "./pages/budgetPage/budgetPage.js";
-import { initLogin } from "./pages/loginPage/loginPage.js";
+import { initLogin, logout } from "./pages/loginPage/loginPage.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
 
 let templates = {};
@@ -47,7 +47,15 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
   );
 };
 
-async function routeHandler() {
+export async function routeHandler() {
+
+  await defaultRoutes();
+
+  console.log("rolehandler done")
+}
+
+export async function defaultRoutes(){
+
   const router = new Navigo("/", { hash: true });
 
   window.router = router;
@@ -79,6 +87,57 @@ async function routeHandler() {
       }
     });
 
-  console.log("rolehandler done")
-  router.notFound(() => {renderTemplate(templates.templateNotFound, "content");}).resolve();
+    if (localStorage.getItem("user")) {
+      await roleHandler();
+    }
+
+    
+
+    router.notFound(() => {renderTemplate(templates.templateNotFound, "content")}).resolve();
+}
+
+
+export async function roleHandler() {
+  //if (localStorage.getItem("user")) {
+
+    console.log("found a user! Showing things a user can see.");
+    //Everything anyone but the ANONYMOUS can access.
+
+    //Removes sign in, since user has already logged in.
+    document.getElementById("signIn").style.display = "none";
+    window.router.off("/signin");
+
+    //Removes login, since role was found.
+    document.getElementById("login").style.display = "none";
+    window.router.off("/login");
+
+    //Shows logout, since role was found.
+    document.getElementById("logout").style.display = "block";
+    window.router.on({
+      "/logout": () => {
+        renderTemplate(templates.templateLogin, "content");
+        logout();
+      },
+    });
+/*
+  } else {
+    console.log("didn't find a user! Showing things anonymous can see.");
+
+    window.router.on({
+      "/signIn": () => {
+        renderTemplate(templates.templateSignIn, "content");
+        initSignIn();
+      }
+    }); 
+
+    window.router.on({
+      "/login": () => {
+        renderTemplate(templates.templateLogin, "content");
+        initLogin();
+      },
+    });
+
+  }
+  */
+  //}
 }
