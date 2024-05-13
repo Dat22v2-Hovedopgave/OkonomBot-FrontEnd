@@ -26,7 +26,7 @@ window.addEventListener("load", async () => {
 
   adjustForMissingHash();
 
-  await routeHandler();
+  await starterRoutes();
 
   console.log("routehandler done");
 });
@@ -47,14 +47,7 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
   );
 };
 
-export async function routeHandler() {
-
-  await defaultRoutes();
-
-  console.log("rolehandler done")
-}
-
-export async function defaultRoutes(){
+export async function starterRoutes(){
 
   const router = new Navigo("/", { hash: true });
 
@@ -73,10 +66,6 @@ export async function defaultRoutes(){
         renderTemplate(templates.templateAbout, "content");
         testEverything();
       },
-      "/budget": () => {
-        renderTemplate(templates.templateBudget, "content");
-        initBudget();
-      },
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
@@ -87,57 +76,65 @@ export async function defaultRoutes(){
       }
     });
 
-    if (localStorage.getItem("user")) {
-      await roleHandler();
-    }
-
-    
+    console.log('Window router after starterRoutes ' , window.router);
 
     router.notFound(() => {renderTemplate(templates.templateNotFound, "content")}).resolve();
 }
 
 
 export async function roleHandler() {
-  //if (localStorage.getItem("user")) {
-
-    console.log("found a user! Showing things a user can see.");
-    //Everything anyone but the ANONYMOUS can access.
-
-    //Removes sign in, since user has already logged in.
-    document.getElementById("signIn").style.display = "none";
-    window.router.off("/signin");
-
-    //Removes login, since role was found.
-    document.getElementById("login").style.display = "none";
-    window.router.off("/login");
-
-    //Shows logout, since role was found.
-    document.getElementById("logout").style.display = "block";
-    window.router.on({
-      "/logout": () => {
-        renderTemplate(templates.templateLogin, "content");
-        logout();
-      },
-    });
-/*
+  if (localStorage.getItem("user")) {
+    userRoutes();
   } else {
-    console.log("didn't find a user! Showing things anonymous can see.");
-
-    window.router.on({
-      "/signIn": () => {
-        renderTemplate(templates.templateSignIn, "content");
-        initSignIn();
-      }
-    }); 
-
-    window.router.on({
-      "/login": () => {
-        renderTemplate(templates.templateLogin, "content");
-        initLogin();
-      },
-    });
-
+    anonymousRoutes();
   }
-  */
-  //}
+  //console.log('Window router after roleHandler ' , window.router);
+}
+
+async function userRoutes(){
+  console.log("found a user! Showing things a user can see.");
+
+  document.getElementById("signIn").style.display = "none";
+  window.router.off("/signIn");
+
+  document.getElementById("login").style.display = "none";
+  window.router.off("/login");
+
+  //Shows logout and budget, since role was found.
+  document.getElementById("logout").style.display = "block";
+  document.getElementById("budget").style.display = "block";
+  window.router.on({
+    "/logout": () => {
+      logout();
+    },
+    "/budget": () => {
+      renderTemplate(templates.templateBudget, "content");
+      initBudget();
+    }
+  });
+}
+
+async function anonymousRoutes(){
+  console.log("didn't find a user! Showing things anonymous can see.")
+
+  document.getElementById("budget").style.display = "none";
+  window.router.off("/budget");
+
+  document.getElementById("login").style.display = "block";
+  document.getElementById("signIn").style.display = "block";
+
+  window.router.on({
+    "/login": () => {
+      renderTemplate(templates.templateLogin, "content");
+      initLogin();
+    },
+    "/signIn": () => {
+      renderTemplate(templates.templateSignIn, "content");
+      initSignIn();
+    }
+  });
+}
+
+async function adminRoutes(){
+
 }

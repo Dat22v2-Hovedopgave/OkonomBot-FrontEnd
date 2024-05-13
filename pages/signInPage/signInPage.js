@@ -52,7 +52,7 @@ async function signUp(user) {
       await fetch(URL,options).then(handleHttpErrors)
       document.getElementById("sysmessage").innerHTML = "Konto oprettet."
       document.querySelector("form").reset()
-      window.router.navigate("/");
+      window.router.navigate("/about");
   } catch (err) {
       document.getElementById("error").innerHTML = err
   }

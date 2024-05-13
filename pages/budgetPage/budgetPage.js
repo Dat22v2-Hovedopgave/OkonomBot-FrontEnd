@@ -11,7 +11,10 @@
         console.log('==>> budgetpage.js Hello from here');
         fetchCategories();
         let username = localStorage.getItem("user"); //skal ændres til at hente username fra localstorage
-        fetchEarnings(username);
+        
+        if(username){
+            fetchEarnings(username);
+        }
     }
 
     function renderEarnings(earningsData) {
