@@ -47,7 +47,7 @@ async function connectLogin(){
 
       window.router.navigate("/about");
     } catch (err) {
-      document.getElementById("error").innerText = err.message
+      document.getElementById("loginError").innerText = err.message
     }
 
   }
