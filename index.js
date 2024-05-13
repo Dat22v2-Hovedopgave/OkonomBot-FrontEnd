@@ -12,7 +12,8 @@ import {
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initBudget } from "./pages/budgetPage/budgetPage.js";
-import { initLogin } from "./pages/loginPage/loginPage.js";
+import { initLogin, logout } from "./pages/loginPage/loginPage.js";
+import { initSignIn } from "./pages/signInPage/signInPage.js";
 
 let templates = {};
 
@@ -21,10 +22,11 @@ window.addEventListener("load", async () => {
   templates.templateNotFound = await loadTemplate("./pages/notFound/notFound.html");
   templates.templateBudget = await loadTemplate("./pages/budgetPage/budgetPage.html");
   templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html");
+  templates.templateSignIn = await loadTemplate("./pages/signInPage/signInPage.html");
 
   adjustForMissingHash();
 
-  await routeHandler();
+  await starterRoutes();
 
   console.log("routehandler done");
 });
@@ -45,7 +47,8 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
   );
 };
 
-async function routeHandler() {
+export async function starterRoutes(){
+
   const router = new Navigo("/", { hash: true });
 
   window.router = router;
@@ -63,16 +66,75 @@ async function routeHandler() {
         renderTemplate(templates.templateAbout, "content");
         testEverything();
       },
-      "/budget": () => {
-        renderTemplate(templates.templateBudget, "content");
-        initBudget();
-      },
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
+      },
+      "/signIn": () => {
+        renderTemplate(templates.templateSignIn, "content");
+        initSignIn();
       }
     });
 
-  console.log("rolehandler done")
-  router.notFound(() => {renderTemplate(templates.templateNotFound, "content");}).resolve();
+    console.log('Window router after starterRoutes ' , window.router);
+
+    router.notFound(() => {renderTemplate(templates.templateNotFound, "content")}).resolve();
+}
+
+
+export async function roleHandler() {
+  if (localStorage.getItem("user")) {
+    userRoutes();
+  } else {
+    anonymousRoutes();
+  }
+  //console.log('Window router after roleHandler ' , window.router);
+}
+
+async function userRoutes(){
+  console.log("found a user! Showing things a user can see.");
+
+  document.getElementById("signIn").style.display = "none";
+  window.router.off("/signIn");
+
+  document.getElementById("login").style.display = "none";
+  window.router.off("/login");
+
+  //Shows logout and budget, since role was found.
+  document.getElementById("logout").style.display = "block";
+  document.getElementById("budget").style.display = "block";
+  window.router.on({
+    "/logout": () => {
+      logout();
+    },
+    "/budget": () => {
+      renderTemplate(templates.templateBudget, "content");
+      initBudget();
+    }
+  });
+}
+
+async function anonymousRoutes(){
+  console.log("didn't find a user! Showing things anonymous can see.")
+
+  document.getElementById("budget").style.display = "none";
+  window.router.off("/budget");
+
+  document.getElementById("login").style.display = "block";
+  document.getElementById("signIn").style.display = "block";
+
+  window.router.on({
+    "/login": () => {
+      renderTemplate(templates.templateLogin, "content");
+      initLogin();
+    },
+    "/signIn": () => {
+      renderTemplate(templates.templateSignIn, "content");
+      initSignIn();
+    }
+  });
+}
+
+async function adminRoutes(){
+
 }
