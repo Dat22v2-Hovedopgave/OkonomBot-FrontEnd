@@ -1,33 +1,58 @@
 <template id="budget-template">
-    <div class="container">
-      <h1 class="mt-5">Budget</h1>
-      <hr>
-  
-      <div id="earnings" class="mb-4">
-        <h3>Earnings</h3>
-        <hr>
-        <div id="earnings-category" class="mb-4">
-        </div>
-        <div class="total-income">
-          <label for="total" class="form-label">Samlede indtægter</label>
-          <input type="text" class="form-control text-right font-weight-bold" id="income-total" readonly>
+  <div class="container">
+    <h1 class="mt-5 text-center">Budget Oversigt</h1>
+    <hr>
+
+    <div class="row">
+      <!-- Left Column for Inputs -->
+      <div class="col-md-6">
+        <div id="budgetInput" class="mb-4">
+          <h2 class="section-title">Indtægter</h2>
           <hr>
+          <div id="earnings-category" class="mb-4"></div>
+          <hr>
+          <h2 class="section-title">Udgifter</h2>
+          <hr>
+          <div id="expenses-category" class="mb-4"></div>
+        </div>
+      </div>
 
+      <!-- Right Column for Outputs inside a card -->
+      <div class="col-md-6">
+        <div class="card text-bg-secondary mb-3" style="max-width: 35rem;">
+          <div class="card-header">Budgetgennemgang</div>
+          <div class="card-body">
+            <h5 class="card-title">Oversigt</h5>
+            <div>
+              <p id="total-earnings">Samlet Månedlig Indkomst: 0.00 kr.</p>
+              <p id="total-expenses">Samlede Månedlige Udgifter: 0.00 kr.</p>
+            </div>
+            <div id="earnings-category-totals" class="mb-4"></div>
+            <div id="expenses-category-totals" class="mb-4"></div>
+            <div class="total">
+              <label for="total-budget" class="form-label">Overskud / Underskud</label>
+              <input type="text" class="form-control text-right font-weight-bold" id="total-budget" readonly>
+              <hr>
+            </div>
+          </div>
+        </div>
       </div>
-  
-      <div id="expenses-category" class="mb-4">
-        <h3>Expenses</h3>
-        <hr>
-      </div>
-      <div class="total-outcome">
-        <label for="total" class="form-label">Samlede udgifter</label>
-        <input type="text" class="form-control text-right font-weight-bold" id="outcome-total" readonly>
-        <hr>
 
     </div>
-  
+    
+    <button id="save-all-button" class="btn btn-primary">Gem</button>
+  </div>
 
+  <!-- Toast Notification -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Success</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Dine data er succesfuldt gemt i databasen.
+      </div>
     </div>
-  </template>
-  
-  
+  </div>
+</template>

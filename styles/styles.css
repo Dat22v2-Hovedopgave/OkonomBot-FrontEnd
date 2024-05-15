@@ -1,6 +1,32 @@
 /* Modern styles for the shopping cart app */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-  }
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.navbar {
+  background-color: #a5abb1; /* Custom background color */
+  width: auto; /* Ensure navbar does not fill the entire screen width */
+  max-width: 80%; /* Adjust the max-width as needed */
+  margin: 0 auto; /* Center the navbar */
+  border-radius: 8px; /* Add some rounded corners for a nicer look */
+  padding: 10px 20px; /* Add some padding for better spacing */
+}
+
+.navbar-brand, .nav-link {
+  color: #ffffff !important; /* White text color */
+}
+
+.nav-link {
+  margin-right: 15px; /* Space between nav links */
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #b3d7ff !important; /* Lighter blue on hover */
+}
+
+.navbar-toggler {
+  border: none; /* Remove border from toggle button */
+}
