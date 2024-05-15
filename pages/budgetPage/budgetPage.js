@@ -49,7 +49,7 @@ function renderEarnings(earnings) {
     totalEarnings = calculateTotalEarnings(earnings);
 
     // Update the total earnings display
-    document.getElementById('total-earnings').innerText = `Samlet Månedlig Indkomst: ${totalEarnings.toFixed(2)} kr.`;
+    document.getElementById('total-earnings').innerText = `${totalEarnings.toFixed(2)} kr.`;
 
     // Update the total budget outcome
     updateTotalBudget();
@@ -80,7 +80,7 @@ function renderExpenses(expenses) {
     totalExpenses = calculateTotalExpenses(expenses);
 
     // Update the total expenses display
-    document.getElementById('total-expenses').innerText = `Samlede Månedlige Udgifter: ${totalExpenses.toFixed(2)} kr.`;
+    document.getElementById('total-expenses').innerText = `${totalExpenses.toFixed(2)} kr.`;
 
     // Update the total budget outcome
     updateTotalBudget();
@@ -93,7 +93,18 @@ function updateTotalBudget() {
     const totalBudget = totalEarnings - totalExpenses;
 
     console.log('Total Budget:', totalBudget);
-    outcomeTotalElement.value = totalBudget + " kr.";
+    outcomeTotalElement.innerHTML = totalBudget + " kr.";
+
+    const totalBudgetCard = document.getElementById('card-total-budget');
+
+    if (totalBudget < 0) {
+        totalBudgetCard.classList.add('bg-danger');
+        totalBudgetCard.classList.remove('bg-success');
+    } else {
+        totalBudgetCard.classList.add('bg-success');
+        totalBudgetCard.classList.remove('bg-danger');
+
+    }
 }
 
 // Function to save all earnings and expenses

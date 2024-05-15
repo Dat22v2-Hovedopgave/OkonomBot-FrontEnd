@@ -86,7 +86,7 @@ function renderEarnings(earningsData) {
     earningsContainer.innerHTML = htmlContent;
 
     // Render category totals inside the card
-    let totalsHtmlContent = '<h5>Indtægter pr. kategori</h5><hr>';
+    let totalsHtmlContent = '<h5>Indtægter pr. kategori</h5><hr class="border border-success border-3 opacity-75">';
     for (let categoryName in categoryTotals) {
         totalsHtmlContent += `<p>${categoryName}: ${categoryTotals[categoryName].toFixed(2)} kr.</p>`;
     }
