@@ -76,8 +76,8 @@ function renderEarnings(earningsData) {
 
         htmlContent += `
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Indtast navn på indtægt..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
-              <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Tilføj indtægt</button>
+              <input type="text" class="form-control" placeholder="indtægt kategori..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
+              <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Tilføj underkategori</button>
             </div>
           </div>
         </div>`;

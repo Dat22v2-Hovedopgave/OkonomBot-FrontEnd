@@ -61,8 +61,8 @@ function renderExpenses(expensesData) {
 
         htmlContent += `
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Indtast navn på udgift..." aria-describedby="add-subcategoryExpense" data-category-id="${categories[categoryName][0].categoryId}">
-              <button class="btn btn-outline-secondary add-subcategoryExpense" type="button">Tilføj udgift</button>
+              <input type="text" class="form-control" placeholder="Udgifts kategori..." aria-describedby="add-subcategoryExpense" data-category-id="${categories[categoryName][0].categoryId}">
+              <button class="btn btn-outline-secondary add-subcategoryExpense" type="button">Tilføj underkategori</button>
             </div>
           </div>
         </div>`;
