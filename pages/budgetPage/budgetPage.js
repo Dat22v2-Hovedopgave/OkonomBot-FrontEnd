@@ -3,6 +3,7 @@ import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 
 import { initEarnings, saveAllEarnings } from "./earnings.js";
 import { initExpenses, saveAllExpenses } from "./expenses.js";
+import { initAdvice } from "../advicePage/advicePage.js";
 
 export function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
@@ -11,6 +12,7 @@ export function initBudget() {
     fetchEarnings(username);
     fetchExpenses(username);
     document.getElementById('save-all-button').addEventListener('click', saveAll);
+    initAdvice();
 }
 
 
