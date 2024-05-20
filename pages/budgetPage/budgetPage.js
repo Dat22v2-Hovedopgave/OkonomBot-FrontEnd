@@ -3,14 +3,28 @@ import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 
 import { initEarnings, saveAllEarnings } from "./earnings.js";
 import { initExpenses, saveAllExpenses } from "./expenses.js";
+import { initPieChart } from "./pieChart.js";
 
-export function initBudget() {
+export async function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
-    initEarnings();
-    initExpenses();
-    fetchEarnings(username);
-    fetchExpenses(username);
+
+    console.log('Waiting for all info to be fetched.');
+    await fetchAllInfo();
+    console.log('All info has been fetched!');
+
+    initPieChart();
+
+    fetchEarnings(username); //???
+    fetchExpenses(username); //???
+
     document.getElementById('save-all-button').addEventListener('click', saveAll);
+}
+
+async function fetchAllInfo(){
+    await Promise.all([
+        initEarnings(),
+        initExpenses()
+    ]);
 }
 
 

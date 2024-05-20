@@ -13,14 +13,14 @@ async function setupAdviceButton(){
     const button = document.getElementById('getAdviceButton');
     console.log(username);
 
-    button.addEventListener('click', async function(event) { // Make the event handler async
+    button.addEventListener('click', async function(event) {
 
         document.getElementById("advice-text").innerHTML = 'Loading . . .';
 
         if(username){
             try {
-                const userInfo = await getUserEcoInfo(username); // Await the async function
-                askGPT(userInfo); // Proceed after getUserEcoInfo has completed
+                const userInfo = await getUserEcoInfo(username);
+                askGPT(userInfo);
             } catch (error) {
                 console.error('Failed to get user info:', error);
                 alert("Failed to retrieve user information.");
@@ -62,7 +62,6 @@ function formatTransactions(earnings, expenses) {
 
 async function askGPT(userInfo){
 
-    //let message = document.getElementById("advice-text").innerHTML;
     const gptDto = { "message": userInfo };
     console.log(gptDto);
     const options = makeOptions("POST",gptDto,false);

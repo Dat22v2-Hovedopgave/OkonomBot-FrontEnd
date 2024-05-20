@@ -1,14 +1,17 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
+import { renderPieCharts } from "./pieChart.js";
 
-export function initExpenses() {
-    fetchCategories();
-    fetchExpenses(username);
-}
+export let fetchedExpenses;
 
 var totalExpenses = 0;
 let expenseCategories = [];
 const username = getUserFromLocalStorage();
+
+export async function initExpenses() {
+    await fetchCategories();
+    await fetchExpenses(username);
+}
 
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
@@ -122,7 +125,11 @@ async function fetchExpenses(username) {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/expenses/user/' + username, options);
         const result = await handleHttpErrors(response);
+        
+        fetchedExpenses = JSON.parse(JSON.stringify(result));
+        console.log('Resulting response from fetchExpenses: ',result);
         renderExpenses(result);
+        renderPieCharts();
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
     }
