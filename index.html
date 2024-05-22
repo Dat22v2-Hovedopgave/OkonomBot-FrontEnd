@@ -20,29 +20,42 @@
 <body>
 
   <div id="topnav">
-    <nav id="menu" class="menu-horizontal">
-      <ul>
-        <li id="menu-id">
-          <a href="/about" data-navigo>Menu</a>
-        </il>
-        <li id="budget" style="display:none">
-          <a href="/budget" data-navigo>Budget</a>
+    <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-body-tertiary mt-3 mx-auto">
+      <div class="container">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customNav" aria-controls="customNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="customNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item" id="menu-id">
+              <a class="nav-link" href="/about" data-navigo>About</a>
+            </li>
+            <li class="nav-item" id="budget" style="display:none">
+              <a class="nav-link" href="/budget" data-navigo>Budget</a>
+            </li>
+            <li class="nav-item" id="advice" style="display:none">
+          <a class="nav-link" href="/advice" data-navigo>Advice</a>
         </li>
-        <li id="login">
-          <a href="/login" data-navigo>Login</a>
-        </li>
-        <li id="logout" style="display:none">
-          <a href="/logout" data-navigo>Logout</a>
-        </li>
-        <li id="signIn">
-          <a href="/signIn" data-navigo>Sign In</a>
-        </li>
-      </ul>
+        <li class="nav-item" id="login">
+              <a class="nav-link" href="/login" data-navigo>Login</a>
+            </li>
+            <li class="nav-item" id="logout" style="display:none">
+              <a class="nav-link" href="/logout" data-navigo>Logout</a>
+            </li>
+            <li class="nav-item" id="signIn">
+              <a class="nav-link" href="/signIn" data-navigo>Sign In</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
     <div id="content" style="margin:15px;"></div>
   </div>
+  <p id="error" class="text-danger mt-3"></p>
+  <p id="sysmessage" class="text-success mt-3"></p>
             <script src="index.js" type="module"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
-              </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
           </body>
           </html>

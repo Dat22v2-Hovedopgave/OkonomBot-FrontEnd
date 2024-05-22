@@ -1,15 +1,19 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
+import { saveAll } from "./budgetPage.js";
+import { renderPieCharts } from "./pieChart.js";
 
-export function initEarnings() {
-    fetchEarnings(username);
-    fetchCategories();
+export let fetchedEarnings;
 
-}
-
+let deletedEarningIds = [];
 var totalEarnings = 0;
 let earningsCategories = [];
 const username = getUserFromLocalStorage();
+
+export async function initEarnings() {
+    fetchEarnings(username);
+    fetchCategories();
+}
 
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
@@ -32,65 +36,88 @@ async function fetchCategories() {
 
 function renderEarnings(earningsData) {
     const earningsContainer = document.getElementById('earnings-category');
+    const earningsTotalsContainer = document.getElementById('earnings-category-totals');
     let categories = {};
+    let categoryTotals = {};
 
     // Group earnings by category
     earningsData.forEach(earning => {
         if (!categories[earning.categoryName]) {
             categories[earning.categoryName] = [];
+            categoryTotals[earning.categoryName] = 0;
         }
         categories[earning.categoryName].push(earning);
+        categoryTotals[earning.categoryName] += earning.amount;
     });
 
     let htmlContent = '';
 
-    htmlContent += `<div class="input-group">
+    htmlContent += `<div class="input-group mb-3" style="max-width: 30rem;">
     <select class="form-select" id="earningCategorySelect" aria-label="Example select with button addon">
-      <option value="" selected>Choose...</option>`;
+      <option value="" selected>Vælg...</option>`;
     earningsCategories.forEach(cat => {
         htmlContent += `<option value="${cat.categoryId}">${cat.name}</option>`;
     });
     htmlContent += `</select>
-    <button class="btn btn-outline-secondary" type="button" id="create-earning-category-button">Create Category</button>
+    <button class="btn btn-outline-secondary" type="button" id="create-earning-category-button">Tilføj Kategori</button>
     </div>`;
 
-    // Build HTML content for each category
+    // Build HTML content for each category inside a card
     for (let categoryName in categories) {
-        htmlContent += '<h3 class="pt-3">' + categoryName + '</h3>'; // Category name header
+        htmlContent += `
+        <div class="card text-bg-light mb-3" style="max-width: 30rem;">
+          <div class="card-header">${categoryName}</div>
+          <div class="card-body">`;
+
         categories[categoryName].forEach(earning => {
-            htmlContent += '<h6>' + earning.subcategoryName + " Subcategory ID: " + earning.subcategoryId + '</h6>'; // Subcategory name
-            htmlContent += '<div class="input-group mb-3">';
-            htmlContent += '<input type="text" class="form-control" value="' + earning.amount + '" id="subcatEarning-' + earning.subcategoryId + '" data-category-id="' + earning.categoryId + '">';
-            htmlContent += '<button class="btn btn-outline-secondary btn-outline-danger" type="button" id="deleteEarning-' + earning.earningId + '")">Delete</button>';
-            htmlContent += '</div>';
-            totalEarnings += earning.amount;
+            htmlContent += `
+            <h6>${earning.subcategoryName}</h6>
+            <div class="input-group mb-3">
+              <span class="input-group-text">kr.</span>
+              <input type="number" class="form-control" value="${earning.amount}" id="subcatEarning-${earning.subcategoryId}" data-category-id="${earning.categoryId}">
+              <button class="btn btn-outline-secondary btn-outline-danger" type="button" id="deleteEarning-${earning.earningId}">Slet</button>
+            </div>`;
         });
 
-        htmlContent += `<div class="input-group input-group-sm mb-3">
-        <input type="text" class="form-control" placeholder="type..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
-        <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Add subcategory</button>
+        htmlContent += `
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="indtægt kategori..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
+              <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Tilføj underkategori</button>
+            </div>
+          </div>
         </div>`;
     }
-    // Tilføj en knap til at gemme alle earnings
-    htmlContent += `<hr><br><button id="save-all-button" class="btn btn-primary">Save Earnings</button>`;
 
     earningsContainer.innerHTML = htmlContent;
+
+    // Render category totals inside the card
+    let totalsHtmlContent = '<h5>Indtægter pr. kategori</h5><hr class="border border-success border-3 opacity-75">';
+    for (let categoryName in categoryTotals) {
+        totalsHtmlContent += `<p>${categoryName}: ${categoryTotals[categoryName].toFixed(2)} kr.</p>`;
+    }
+    earningsTotalsContainer.innerHTML = totalsHtmlContent;
+
     attachEventListeners();
-    updateIncomeTotal();
 }
+
 
 async function fetchEarnings(username) {
     try {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/earnings/user/' + username, options);
         const result = await handleHttpErrors(response);
+
+        fetchedEarnings = JSON.parse(JSON.stringify(result)); //Only way to make a copy of the object instead of referring to it.
+        console.log('Resulting response from fetchEarnings: ',result);
         renderEarnings(result);
+        //renderPieCharts();
+        
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
     }
 }
 
-async function saveAllEarnings() {
+export async function saveAllEarnings() {
     const earningsInputs = document.querySelectorAll('[id^="subcatEarning-"]');
     const earnings = Array.from(earningsInputs).map(input => ({
         username: username,
@@ -111,7 +138,7 @@ async function saveAllEarnings() {
     }
 }
 
-function addCategory() {
+async function addCategory() {
     const categorySelect = document.getElementById('earningCategorySelect');
     const categoryId = categorySelect.value;
 
@@ -122,15 +149,16 @@ function addCategory() {
 
     const subcategory = {
         categoryId: categoryId,
-        name: 'New Subcategory',
+        name: 'Diverse',
         username: username
     };
 
     postSubcategory(subcategory);
+    await saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }
 
-function addSubcategory(button) {
+async function addSubcategory(button) {
     const subcategoryInput = button.previousElementSibling;
     const categoryId = subcategoryInput.dataset.categoryId;
     const subcategoryName = subcategoryInput.value.trim();
@@ -146,6 +174,7 @@ function addSubcategory(button) {
         username: username
     };
     postSubcategory(subcategory);
+    await saveAll();
 }
 
 async function postSubcategory(subcategory) {
@@ -154,7 +183,6 @@ async function postSubcategory(subcategory) {
         const response = await fetch(URL + '/subcategories/addSubcategory', options);
         const result = await handleHttpErrors(response);
         console.log('Subcategory added successfully:', result);
-        fetchEarnings(username);
     } catch (error) {
         console.error('There was a problem adding the subcategory:', error);
     }
@@ -162,22 +190,21 @@ async function postSubcategory(subcategory) {
 }
 
 async function deleteEarning(earningId) {
+    await saveAll();
     console.log('Deleting earning with earnings ID:', earningId);
     const options = makeOptions("DELETE", '', false);
     try {
         const response = await fetch(URL + '/earnings/' + earningId, options);
         const result = await handleHttpErrors(response);
         console.log('Earning deleted successfully:', result);
-        await fetchEarnings(username);
     } catch (error) {
         console.error('There was a problem deleting the earning:', error);
     }
+    fetchEarnings(username);
+
 }
 
 function attachEventListeners() {
-    const saveButton = document.getElementById('save-all-button');
-    saveButton.addEventListener('click', saveAllEarnings);
-
     const addCategoryButton = document.getElementById('create-earning-category-button');
     addCategoryButton.addEventListener('click', addCategory);
 
@@ -196,8 +223,3 @@ function attachEventListeners() {
     });
 }
 
-function updateIncomeTotal() {
-    const incomeTotal = document.getElementById('income-total');
-    incomeTotal.value = totalEarnings;
-    totalEarnings = 0;
-}
