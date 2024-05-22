@@ -1,5 +1,7 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
+import { saveAll } from "./budgetPage.js";
+
 
 export function initExpenses() {
     fetchCategories();
@@ -78,7 +80,6 @@ function renderExpenses(expensesData) {
     expensesTotalsContainer.innerHTML = totalsHtmlContent;
 
     attachEventListeners();
-    updateOutcomeTotal();
 }
 
 
@@ -150,16 +151,18 @@ export async function saveAllExpenses() {
 }
 
 async function deleteExpenses(expensesId) {
+    await saveAll();
     console.log('Deleting expense with expenses ID:', expensesId);
     const options = makeOptions("DELETE", '', false);
     try {
         const response = await fetch(URL + '/expenses/' + expensesId, options);
         const result = await handleHttpErrors(response);
         console.log('Expense deleted successfully:', result);
-        await fetchExpenses(username);
     } catch (error) {
         console.error('There was a problem deleting the expense:', error);
     }
+    fetchExpenses(username);
+
 }
 
 function addCategory() {
@@ -178,6 +181,7 @@ function addCategory() {
     };
 
     postSubcategory(subcategory);
+    saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }
 
@@ -197,6 +201,7 @@ function addSubcategory(button) {
         username: username
     };
     postSubcategory(subcategory);
+    saveAll();
 }
 
 async function postSubcategory(subcategory) {
@@ -205,13 +210,9 @@ async function postSubcategory(subcategory) {
         const response = await fetch(URL + '/subcategories/addSubcategory', options);
         const result = await handleHttpErrors(response);
         console.log('Subcategory added successfully:', result);
-        fetchExpenses(username);
     } catch (error) {
         console.error('There was a problem adding the subcategory:', error);
     }
     console.log('Adding subcategory:', subcategory.name, 'to category ID:', subcategory.categoryId);
 }
 
-function updateOutcomeTotal() {
-    // Update outcome total logic here
-}

@@ -11,10 +11,15 @@ export function initBudget() {
     initExpenses();
     fetchEarnings(username);
     fetchExpenses(username);
-    document.getElementById('save-all-button').addEventListener('click', saveAll);
+    document.getElementById('save-all-button').addEventListener('click', calculator);
     initAdvice();
 }
 
+async function calculator(){
+    await saveAll();
+    await fetchEarnings(username);
+    await fetchExpenses(username);
+}
 
 const username = getUserFromLocalStorage();
 
@@ -110,12 +115,10 @@ function updateTotalBudget() {
 }
 
 // Function to save all earnings and expenses
-async function saveAll() {
+export async function saveAll() {
     try {
         await saveAllEarnings();
         await saveAllExpenses();
-        fetchEarnings(username);
-        fetchExpenses(username);
         showToast();
     } catch (error) {
         console.error('Error saving data:', error);
