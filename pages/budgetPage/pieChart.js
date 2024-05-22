@@ -1,5 +1,6 @@
 import { fetchedEarnings } from "./earnings.js";
 import { fetchedExpenses } from "./expenses.js";
+import { totalEarnings, totalExpenses } from "./budgetPage.js";
 
 export function initPieChart(){
     console.log('Hello from pieChart factory!');
@@ -22,9 +23,6 @@ function renderExpensesAndRestPie(earnings,expenses){
         console.error('Earnings or expenses data is missing');
         return;
     }
-
-    const totalEarnings = earnings.reduce((acc, earning) => acc + earning.amount, 0);
-    const totalExpenses = expenses.reduce((acc, expense) => acc + expense.amount, 0);
 
     let expensePercentage, incomePercentage;
 

@@ -6,14 +6,15 @@ import { initExpenses, saveAllExpenses } from "./expenses.js";
 import { initAdvice } from "../advicePage/advicePage.js";
 import { initPieChart } from "./pieChart.js";
 
+export let totalEarnings = 0;
+export let totalExpenses = 0;
+
 export async function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
 
     console.log('Waiting for all info to be fetched.');
     await fetchAllInfo();
     console.log('All info has been fetched!');
-
-    initPieChart();
 
     fetchEarnings(username); //???
     fetchExpenses(username); //???
@@ -23,9 +24,10 @@ export async function initBudget() {
 }
 
 async function calculator(){
-    await saveAll();
-    await fetchEarnings(username);
-    await fetchExpenses(username);
+    await saveAll()
+    await fetchEarnings(username)
+    await fetchExpenses(username)
+    initPieChart() 
 }
 
 async function fetchAllInfo(){
@@ -41,9 +43,6 @@ const username = getUserFromLocalStorage();
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
 }
-
-let totalEarnings = 0;
-let totalExpenses = 0;
 
 async function fetchEarnings(username) {
     try {

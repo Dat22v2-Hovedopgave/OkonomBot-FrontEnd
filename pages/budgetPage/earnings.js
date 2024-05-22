@@ -110,7 +110,7 @@ async function fetchEarnings(username) {
         fetchedEarnings = JSON.parse(JSON.stringify(result)); //Only way to make a copy of the object instead of referring to it.
         console.log('Resulting response from fetchEarnings: ',result);
         renderEarnings(result);
-        renderPieCharts();
+        //renderPieCharts();
         
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
@@ -138,7 +138,7 @@ export async function saveAllEarnings() {
     }
 }
 
-function addCategory() {
+async function addCategory() {
     const categorySelect = document.getElementById('earningCategorySelect');
     const categoryId = categorySelect.value;
 
@@ -154,11 +154,11 @@ function addCategory() {
     };
 
     postSubcategory(subcategory);
-    saveAll();
+    await saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }
 
-function addSubcategory(button) {
+async function addSubcategory(button) {
     const subcategoryInput = button.previousElementSibling;
     const categoryId = subcategoryInput.dataset.categoryId;
     const subcategoryName = subcategoryInput.value.trim();
@@ -174,7 +174,7 @@ function addSubcategory(button) {
         username: username
     };
     postSubcategory(subcategory);
-    saveAll();
+    await saveAll();
 }
 
 async function postSubcategory(subcategory) {
