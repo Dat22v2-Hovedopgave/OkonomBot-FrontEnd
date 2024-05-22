@@ -30,3 +30,25 @@ body {
 .navbar-toggler {
   border: none; /* Remove border from toggle button */
 }
+
+.advice-box {
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  position: relative;
+  max-width: 400px;
+}
+.advice-box::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+  border-left-color: #007bff;
+}
+.robot-img {
+  width: 200px;
+  height: auto;
+}

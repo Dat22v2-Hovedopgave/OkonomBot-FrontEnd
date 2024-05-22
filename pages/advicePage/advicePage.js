@@ -45,20 +45,25 @@ async function getUserEcoInfo(username){
 }
 
 function formatTransactions(earnings, expenses) {
-    let result = "";
+    let result = "Earnings:";
 
     // Process earnings - these will have positive amounts
     for (const earning of earnings) {
-        result += `${earning.subcategoryName}:${earning.amount};`;
+        result += `Kategori:${earning.categoryName}; Underkategori:${earning.subcategoryName}:${earning.amount};`;
     }
+
+    // Start the expenses section
+    result += "Expenses:";
 
     // Process expenses - these need to be shown with negative amounts
     for (const expense of expenses) {
-        result += `${expense.subcategoryName}:-${expense.amount};`;
+        result += `Kategori:${expense.categoryName}; Underkategori:${expense.subcategoryName}:-${expense.amount};`;
     }
 
     return result;
 }
+
+
 
 async function askGPT(userInfo){
 

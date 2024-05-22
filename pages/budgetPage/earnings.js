@@ -1,11 +1,13 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
+import { saveAll } from "./budgetPage.js";
 
 export function initEarnings() {
     fetchEarnings(username);
     fetchCategories();
 }
 
+let deletedEarningIds = [];
 var totalEarnings = 0;
 let earningsCategories = [];
 const username = getUserFromLocalStorage();
@@ -76,8 +78,8 @@ function renderEarnings(earningsData) {
 
         htmlContent += `
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Indtast navn på indtægt..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
-              <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Tilføj indtægt</button>
+              <input type="text" class="form-control" placeholder="indtægt kategori..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
+              <button class="btn btn-outline-secondary add-subcategoryEarning" type="button">Tilføj underkategori</button>
             </div>
           </div>
         </div>`;
@@ -93,7 +95,6 @@ function renderEarnings(earningsData) {
     earningsTotalsContainer.innerHTML = totalsHtmlContent;
 
     attachEventListeners();
-    updateIncomeTotal();
 }
 
 
@@ -145,6 +146,7 @@ function addCategory() {
     };
 
     postSubcategory(subcategory);
+    saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }
 
@@ -164,6 +166,7 @@ function addSubcategory(button) {
         username: username
     };
     postSubcategory(subcategory);
+    saveAll();
 }
 
 async function postSubcategory(subcategory) {
@@ -172,7 +175,6 @@ async function postSubcategory(subcategory) {
         const response = await fetch(URL + '/subcategories/addSubcategory', options);
         const result = await handleHttpErrors(response);
         console.log('Subcategory added successfully:', result);
-        fetchEarnings(username);
     } catch (error) {
         console.error('There was a problem adding the subcategory:', error);
     }
@@ -180,16 +182,18 @@ async function postSubcategory(subcategory) {
 }
 
 async function deleteEarning(earningId) {
+    await saveAll();
     console.log('Deleting earning with earnings ID:', earningId);
     const options = makeOptions("DELETE", '', false);
     try {
         const response = await fetch(URL + '/earnings/' + earningId, options);
         const result = await handleHttpErrors(response);
         console.log('Earning deleted successfully:', result);
-        await fetchEarnings(username);
     } catch (error) {
         console.error('There was a problem deleting the earning:', error);
     }
+    fetchEarnings(username);
+
 }
 
 function attachEventListeners() {
@@ -211,6 +215,3 @@ function attachEventListeners() {
     });
 }
 
-function updateIncomeTotal() {
-    // Update income total logic here
-}
