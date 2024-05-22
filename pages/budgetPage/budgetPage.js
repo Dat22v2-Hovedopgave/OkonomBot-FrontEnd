@@ -4,13 +4,20 @@ import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 import { initEarnings, saveAllEarnings } from "./earnings.js";
 import { initExpenses, saveAllExpenses } from "./expenses.js";
 import { initAdvice } from "../advicePage/advicePage.js";
+import { initPieChart } from "./pieChart.js";
 
-export function initBudget() {
+export async function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
-    initEarnings();
-    initExpenses();
-    fetchEarnings(username);
-    fetchExpenses(username);
+
+    console.log('Waiting for all info to be fetched.');
+    await fetchAllInfo();
+    console.log('All info has been fetched!');
+
+    initPieChart();
+
+    fetchEarnings(username); //???
+    fetchExpenses(username); //???
+
     document.getElementById('save-all-button').addEventListener('click', calculator);
     initAdvice();
 }
@@ -20,6 +27,14 @@ async function calculator(){
     await fetchEarnings(username);
     await fetchExpenses(username);
 }
+
+async function fetchAllInfo(){
+    await Promise.all([
+        initEarnings(),
+        initExpenses()
+    ]);
+}
+
 
 const username = getUserFromLocalStorage();
 

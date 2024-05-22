@@ -1,16 +1,19 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 import { saveAll } from "./budgetPage.js";
+import { renderPieCharts } from "./pieChart.js";
 
-export function initEarnings() {
-    fetchEarnings(username);
-    fetchCategories();
-}
+export let fetchedEarnings;
 
 let deletedEarningIds = [];
 var totalEarnings = 0;
 let earningsCategories = [];
 const username = getUserFromLocalStorage();
+
+export async function initEarnings() {
+    fetchEarnings(username);
+    fetchCategories();
+}
 
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
@@ -103,7 +106,12 @@ async function fetchEarnings(username) {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/earnings/user/' + username, options);
         const result = await handleHttpErrors(response);
+
+        fetchedEarnings = JSON.parse(JSON.stringify(result)); //Only way to make a copy of the object instead of referring to it.
+        console.log('Resulting response from fetchEarnings: ',result);
         renderEarnings(result);
+        renderPieCharts();
+        
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
     }
