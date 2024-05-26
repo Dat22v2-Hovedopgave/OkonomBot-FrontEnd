@@ -42,11 +42,11 @@ body {
 .advice-box::after {
   content: '';
   position: absolute;
-  top: 50%;
-  right: -20px;
-  transform: translateY(-50%);
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   border: 10px solid transparent;
-  border-left-color: #007bff;
+  border-bottom-color: #007bff;
 }
 .robot-img {
   width: 200px;

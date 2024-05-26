@@ -38,7 +38,7 @@ function renderExpensesAndIncomePie(earnings,expenses){
     const chart = new CanvasJS.Chart("expensesAndRestPie", {
         animationEnabled: true,
         title: {
-            text: "Udgifter ift. al indkomst"
+            text: "Udgifter og indtægter"
         },
         data: [{
             type: "pie",
@@ -72,7 +72,7 @@ function renderExpensesCategoryPie(expenses) {
     const chart = new CanvasJS.Chart("entireExpensesPie", {
         animationEnabled: true,
         title: {
-            text: "Expense Breakdown by Category"
+            text: "Udgifter pr. kategori"
         },
         data: [{
             type: "pie",

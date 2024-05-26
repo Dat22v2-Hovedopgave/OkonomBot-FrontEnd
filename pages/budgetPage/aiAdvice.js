@@ -14,7 +14,7 @@ async function setupAdviceButton(){
 
     button.addEventListener('click', async function(event) {
 
-        document.getElementById("advice-text").innerHTML = 'Loading . . .';
+        document.getElementById("advice-text").innerHTML = 'Tænker . . .';
 
         if(username){
             try {
@@ -75,8 +75,8 @@ async function askGPT(userInfo){
 
       console.log("Svar fra gpt: ",response);
 
-      typeOutResponse(response);
-      //document.getElementById("advice-text").innerHTML = response.message;
+      //typeOutResponse(response);
+      document.getElementById("advice-text").innerHTML = response.message;
 
     } catch (error) {
       document.getElementById("error").innerText = error.message

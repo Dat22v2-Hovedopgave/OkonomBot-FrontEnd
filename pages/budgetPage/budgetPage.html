@@ -3,36 +3,35 @@
     <h1 class="mt-5 text-center">Budget Oversigt</h1>
     <hr>
 
-    <div class="row">
+    <div class="row mb-4">
       <!-- Venstre kolonne til input -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div id="budgetInput" class="mb-4">
           <div class="custom-card">
-          <h2 class="section-title">Indtægter</h2>
-          <hr>
-          <!-- Container til indtægtskategorier -->
-          <div id="earnings-category" class="mb-4"></div>
-          <hr>
-        </div>
-        <div class="custom-card">
-
-          <h2 class="section-title">Udgifter</h2>
-          <hr>
-          <!-- Container til udgiftskategorier -->
-          <div id="expenses-category" class="mb-4"></div>
-        </div>
+            <h2 class="section-title">Indtægter</h2>
+            <hr>
+            <!-- Container til indtægtskategorier -->
+            <div id="earnings-category" class="mb-4"></div>
+            <hr>
+          </div>
+          <div class="custom-card">
+            <h2 class="section-title">Udgifter</h2>
+            <hr>
+            <!-- Container til udgiftskategorier -->
+            <div id="expenses-category" class="mb-4"></div>
+          </div>
         </div>
       </div>
 
       <!-- Højre kolonne til output inde i et kort -->
-      <div class="col-md-6">
-        <div class="card text-center" style="width: 450px;">
+      <div class="col-md-4">
+        <div class="card text-center" style="width: 100%;">
           <div class="card-header bg-light">
             <!-- Billede af økonomibot -->
-            <img src="images\okonombot.png" alt="Calculator Icon" class="img-fluid" style="width: 125px; height: 125px;">
+            <img src="images/okonombot.png" alt="Calculator Icon" class="img-fluid" style="width: 125px; height: 125px;">
           </div>
           <div class="card-body">
-            <h2 class="card-title">Månedens budget</h2>
+            <h2 class="card-title" style="color: #ff6f00">Månedens budget</h2>
             <div class="d-flex justify-content-between py-3">
               <span>Samlet Månedlig Indkomst</span>
               <span id="total-earnings">0.00 kr.</span>
@@ -61,12 +60,13 @@
             <div class="font-weight-bold" id="total-budget">0.00 kr.</div>
           </div>
         </div>
-        <button id="save-all-button" class="btn btn-primary btn-lg btn-block mt-3">Gem og beregn</button>
-        
+        <div class="d-flex justify-content-center">
+          <button id="save-all-button" class="btn btn-primary btn-lg btn-block mt-3" style="max-width: 300px;">Beregn og generer diagrammer</button>
+        </div>
+
         <!-- Kort til diagrammer -->
-        <div class="card mt-5" style="width: 450px;">
+        <div class="card mt-5" style="width: 100%;">
           <div class="card-body">
-            <button id="piecharts" class="btn btn-primary mt-3">Opret diagrammer</button>
             <div class="container">
               <div class="row">
                 <div class="col-md-6">
@@ -79,18 +79,22 @@
             </div>
           </div>
         </div>
+      </div>
 
+      <div class="col-md-4">
         <!-- Sektion til rådgivning -->
         <div class="container overflow-hidden mt-5">
           <div class="row gx-5 align-items-center">
-            <div class="col-md-8">
-              <div class="advice-box">
+            <div class="col-md-12 text-center">
+              <img src="images/robot.png" alt="Robot" class="robot-img">
+            </div>
+            <div class="col-md-12">
+              <div class="advice-box mt-3">
                 <span id="advice-text">Tryk på knappen for neden for økonomisk rådgivning. Jeg vil prøve mit bedste...</span>
               </div>
-              <button id="getAdviceButton" class="btn btn-primary mt-3">Få rådgivning</button>
-            </div>
-            <div class="col-md-4 text-center">
-              <img src="images/robot.png" alt="Robot" class="robot-img">
+              <div class="d-flex justify-content-center">
+                <button id="getAdviceButton" class="btn btn-primary mt-3" style="max-width: 300px;">Få rådgivning</button>
+              </div>
             </div>
           </div>
         </div>
