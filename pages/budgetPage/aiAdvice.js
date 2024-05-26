@@ -11,7 +11,6 @@ async function setupAdviceButton(){
 
     const username = localStorage.getItem('user');
     const button = document.getElementById('getAdviceButton');
-    console.log(username);
 
     button.addEventListener('click', async function(event) {
 
@@ -76,11 +75,32 @@ async function askGPT(userInfo){
 
       console.log(response);
 
+      typeOutResponse(response);
       document.getElementById("advice-text").innerHTML = response.message;
 
     } catch (error) {
       document.getElementById("error").innerText = error.message
     }
+}
+
+function typeOutResponse(responseMessage) {
+    const TYPESPEEDINMS = 100; // Speed of typing in milliseconds
+    let index = 0; // Initial index to start typing from
+    const element = document.getElementById("advice-text"); // Target element
+    const response = responseMessage; // Message to be typed out
+
+    element.textContent = ''; // Clear the element content
+    element.style.borderRight = '2px solid black'; // Add cursor
+
+    const intervalId = setInterval(() => {
+        if (index < response.length) {
+            element.textContent += response.charAt(index);
+            index++;
+        } else {
+            clearInterval(intervalId);
+            element.style.borderRight = 'none'; // Remove cursor after typing
+        }
+    }, TYPESPEEDINMS);
 }
 
 async function fetchEarnings(username) {
