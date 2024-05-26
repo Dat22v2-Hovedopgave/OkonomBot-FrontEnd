@@ -4,88 +4,98 @@
     <hr>
 
     <div class="row">
-      <!-- Left Column for Inputs -->
+      <!-- Venstre kolonne til input -->
       <div class="col-md-6">
         <div id="budgetInput" class="mb-4">
+          <div class="custom-card">
           <h2 class="section-title">Indtægter</h2>
           <hr>
+          <!-- Container til indtægtskategorier -->
           <div id="earnings-category" class="mb-4"></div>
           <hr>
+        </div>
+        <div class="custom-card">
+
           <h2 class="section-title">Udgifter</h2>
           <hr>
+          <!-- Container til udgiftskategorier -->
           <div id="expenses-category" class="mb-4"></div>
         </div>
+        </div>
       </div>
 
-      <!-- Right Column for Outputs inside a card -->
+      <!-- Højre kolonne til output inde i et kort -->
       <div class="col-md-6">
-        
         <div class="card text-center" style="width: 450px;">
           <div class="card-header bg-light">
-              <img src="images\okonombot.png" alt="Calculator Icon" class="img-fluid" style="width: 125px; height: 125px;">
+            <!-- Billede af økonomibot -->
+            <img src="images\okonombot.png" alt="Calculator Icon" class="img-fluid" style="width: 125px; height: 125px;">
           </div>
           <div class="card-body">
-              <h2 class="card-title">Budgetgennemgang</h2>
-              <div class="d-flex justify-content-between py-3">
-                  <span>Samlet Månedlig Indkomst</span>
-                  <span id="total-earnings">0.00 kr.</span>
-              </div>
-              <div class="d-flex justify-content-between py-3">
-                  <span>Samlede Månedlige Udgifter</span>
-                  <span id="total-expenses">0.00 kr.</span>
-              </div>
-             
-              <div class="row">
+            <h2 class="card-title">Månedens budget</h2>
+            <div class="d-flex justify-content-between py-3">
+              <span>Samlet Månedlig Indkomst</span>
+              <span id="total-earnings">0.00 kr.</span>
+            </div>
+            <div class="d-flex justify-content-between py-3">
+              <span>Samlede Månedlige Udgifter</span>
+              <span id="total-expenses">0.00 kr.</span>
+            </div>
 
-                <div class="col-md-6">
-              <div class="d-flex justify-content-between py-3">
-                  <span id="earnings-category-totals">0.00 kr.</span>
-              </div>
-              </div>
-
+            <div class="row">
               <div class="col-md-6">
-              <div class="d-flex justify-content-between py-3">
+                <div class="d-flex justify-content-between py-3">
+                  <span id="earnings-category-totals">0.00 kr.</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex justify-content-between py-3">
                   <span id="expenses-category-totals">0.00 kr.</span>
+                </div>
               </div>
-              </div>
-
-              </div>
-              
-              <hr>
+            </div>
+            <hr>
           </div>
           <div id="card-total-budget" class="card-footer bg-success text-white">
-              <span>Overskud / Underskud</span>
-              <div class="font-weight-bold" id="total-budget">0.00 kr.</div>
+            <span>Overskud / Underskud</span>
+            <div class="font-weight-bold" id="total-budget">0.00 kr.</div>
           </div>
-      </div>
-      <button id="save-all-button" class="btn btn-primary btn-lg btn-block mt-3">Beregn</button>
-      <div>
-        <div id="expensesAndRestPie" style="height: 370px; width: 100%;"></div>
-      </div>
-
-      <div>
-        <div id="entireExpensesPie" style="height: 370px; width: 100%;"></div>
-      </div>
-       <!-- Insert the advice section here -->
-       <div class="container overflow-hidden mt-5">
-        <div class="row gx-5 align-items-center">
-            <div class="col-md-8">
-                <div class="advice-box">
-                    <span id="advice-text">Tryk på knappen for neden for økonomisk rådgivning. Jeg vil prøve mit bedste...</span>
+        </div>
+        <button id="save-all-button" class="btn btn-primary btn-lg btn-block mt-3">Gem og beregn</button>
+        
+        <!-- Kort til diagrammer -->
+        <div class="card mt-5" style="width: 450px;">
+          <div class="card-body">
+            <button id="piecharts" class="btn btn-primary mt-3">Opret diagrammer</button>
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <div id="expensesAndRestPie" style="height: 300px; width: 100%;"></div>
                 </div>
-                <button id="getAdviceButton" class="btn btn-primary mt-3">Rådgivning</button>
+                <div class="col-md-6">
+                  <div id="entireExpensesPie" style="height: 300px; width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sektion til rådgivning -->
+        <div class="container overflow-hidden mt-5">
+          <div class="row gx-5 align-items-center">
+            <div class="col-md-8">
+              <div class="advice-box">
+                <span id="advice-text">Tryk på knappen for neden for økonomisk rådgivning. Jeg vil prøve mit bedste...</span>
+              </div>
+              <button id="getAdviceButton" class="btn btn-primary mt-3">Få rådgivning</button>
             </div>
             <div class="col-md-4 text-center">
-                <img src="images/robot.png" alt="Robot" class="robot-img">
+              <img src="images/robot.png" alt="Robot" class="robot-img">
             </div>
+          </div>
         </div>
-    </div>
-
-      
       </div>
-      
     </div>
-    
   </div>
 
   <!-- Toast Notification -->

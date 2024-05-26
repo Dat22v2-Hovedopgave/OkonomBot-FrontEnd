@@ -48,7 +48,7 @@ function renderExpensesAndRestPie(earnings,expenses){
             type: "pie",
             startAngle: 240,
             yValueFormatString: "##0.00\"%\"",
-            indexLabel: "{label} {y}",
+            indexLabel: "",
             dataPoints: dataPoints
         }]
     });
@@ -74,7 +74,7 @@ function renderEntireExpensesPie(expenses){
             type: "pie",
             startAngle: 240,
             yValueFormatString: "##0.00\"%\"",
-            indexLabel: "{label} {y}",
+            indexLabel: "",
             dataPoints: dataPoints
         }]
     });

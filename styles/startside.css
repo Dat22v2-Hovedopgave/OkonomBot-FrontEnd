@@ -1,0 +1,39 @@
+.custom-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 2rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-card h2 {
+    color: #ff6f00;
+}
+
+.custom-card p {
+    font-size: 1.1rem;
+}
+
+.section-header {
+    font-weight: bold;
+}
+
+.section-description {
+    margin-bottom: 1rem;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+}
+
+.reset-link {
+    float: right;
+}
+
+.custom-card .row {
+    margin-top: 1rem;
+}
