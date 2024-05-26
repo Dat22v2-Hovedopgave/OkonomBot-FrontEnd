@@ -3,8 +3,8 @@ import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 
 import { initEarnings, saveAllEarnings } from "./earnings.js";
 import { initExpenses, saveAllExpenses } from "./expenses.js";
-import { initAdvice } from "../advicePage/advicePage.js";
 import { initPieChart } from "./pieChart.js";
+import { initAdvice } from "./aiAdvice.js";
 
 export let totalEarnings = 0;
 export let totalExpenses = 0;
@@ -12,9 +12,7 @@ export let totalExpenses = 0;
 export async function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
 
-    console.log('Waiting for all info to be fetched.');
     await fetchAllInfo();
-    console.log('All info has been fetched!');
 
     fetchEarnings(username); //???
     fetchExpenses(username); //???
@@ -146,3 +144,4 @@ function showToast() {
     const toast = new bootstrap.Toast(toastElement);
     toast.show();
 }
+
