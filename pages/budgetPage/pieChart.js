@@ -11,28 +11,24 @@ export function initPieChart(){
 
 export function renderPieCharts(earnings,expenses){
 
-    renderExpensesAndRestPie(earnings,expenses);
+    renderExpensesAndIncomePie(earnings,expenses);
 
-    renderEntireExpensesPie(expenses);
+    renderExpensesCategoryPie(expenses);
 
 }
 
-function renderExpensesAndRestPie(earnings,expenses){
+function renderExpensesAndIncomePie(earnings,expenses){
 
     if (!earnings || !expenses) {
         console.error('Earnings or expenses data is missing');
         return;
     }
 
-    let expensePercentage, incomePercentage;
+    let totalMoney = totalEarnings + totalExpenses;
 
-    if (totalExpenses > totalEarnings) {
-        expensePercentage = (totalExpenses / totalEarnings) * 100;
-        incomePercentage = 0;
-    } else {
-        expensePercentage = (totalExpenses / totalEarnings) * 100;
-        incomePercentage = 100 - expensePercentage;
-    }
+    let expensePercentage = (totalExpenses / totalMoney) * 100;
+
+    let incomePercentage = (totalEarnings / totalMoney) * 100;
 
     const dataPoints = [
         { label: "Udgifter", y: expensePercentage, color: "red" },
@@ -56,19 +52,27 @@ function renderExpensesAndRestPie(earnings,expenses){
     chart.render();
 }
 
-function renderEntireExpensesPie(expenses){
+function renderExpensesCategoryPie(expenses) {
+    const categoryTotals = {};
+
+    expenses.forEach(expense => {
+        if (!categoryTotals[expense.categoryName]) {
+            categoryTotals[expense.categoryName] = 0;
+        }
+        categoryTotals[expense.categoryName] += expense.amount;
+    });
 
     const totalAmount = expenses.reduce((acc, expense) => acc + expense.amount, 0);
 
-    const dataPoints = expenses.map(expense => ({
-        y: (expense.amount / totalAmount) * 100, // percentage
-        label: `${expense.subcategoryName} (${expense.categoryName})`
+    const dataPoints = Object.keys(categoryTotals).map(categoryName => ({
+        y: (categoryTotals[categoryName] / totalAmount) * 100,
+        label: categoryName
     }));
-
-    var chart = new CanvasJS.Chart("entireExpensesPie", {
+    
+    const chart = new CanvasJS.Chart("entireExpensesPie", {
         animationEnabled: true,
         title: {
-            text: "Expense Breakdown"
+            text: "Expense Breakdown by Category"
         },
         data: [{
             type: "pie",
