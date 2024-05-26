@@ -3,7 +3,6 @@ import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
 
 import { initEarnings, saveAllEarnings } from "./earnings.js";
 import { initExpenses, saveAllExpenses } from "./expenses.js";
-import { initAdvice } from "./aiAdvice.js";
 import { initPieChart } from "./pieChart.js";
 import { initAdvice } from "./aiAdvice.js";
 
@@ -12,8 +11,6 @@ export let totalExpenses = 0;
 
 export async function initBudget() {
     console.log('==>> budgetpage.js Hello from here');
-
-    initAdvice();
 
     await fetchAllInfo();
 

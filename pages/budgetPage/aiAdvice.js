@@ -73,10 +73,10 @@ async function askGPT(userInfo){
     try {
       const response = await fetch(URL + '/ai/', options).then(res=>handleHttpErrors(res));
 
-      console.log(response);
+      console.log("Svar fra gpt: ",response);
 
       typeOutResponse(response);
-      document.getElementById("advice-text").innerHTML = response.message;
+      //document.getElementById("advice-text").innerHTML = response.message;
 
     } catch (error) {
       document.getElementById("error").innerText = error.message
@@ -84,14 +84,16 @@ async function askGPT(userInfo){
 }
 
 function typeOutResponse(responseMessage) {
-    const TYPESPEEDINMS = 100; // Speed of typing in milliseconds
-    let index = 0; // Initial index to start typing from
+    const TYPESPEEDINMS = 30; // Speed of typing in milliseconds
     const element = document.getElementById("advice-text"); // Target element
-    const response = responseMessage; // Message to be typed out
+    const response = responseMessage.message; // Message to be typed out
+
+    console.log("response: ",response);
 
     element.textContent = ''; // Clear the element content
     element.style.borderRight = '2px solid black'; // Add cursor
 
+    let index = 0; // Initial index to start typing from
     const intervalId = setInterval(() => {
         if (index < response.length) {
             element.textContent += response.charAt(index);
