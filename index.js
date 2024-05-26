@@ -25,6 +25,7 @@ window.addEventListener("load", async () => {
   templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html");
   templates.templateSignIn = await loadTemplate("./pages/signInPage/signInPage.html");
   templates.templateAdvice = await loadTemplate("./pages/advicePage/advicePage.html");
+  templates.templateMenu = await loadTemplate("./pages/menuPage/menuPage.html");
 
   adjustForMissingHash();
 
@@ -67,6 +68,9 @@ export async function starterRoutes(){
       "/about": () => {
         renderTemplate(templates.templateAbout, "content");
         testEverything();
+      },
+      "/menu": () => {
+        renderTemplate(templates.templateMenu, "content");
       },
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");

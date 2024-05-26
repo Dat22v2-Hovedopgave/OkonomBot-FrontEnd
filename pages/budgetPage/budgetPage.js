@@ -20,6 +20,8 @@ export async function initBudget() {
     fetchExpenses(username); //???
 
     document.getElementById('save-all-button').addEventListener('click', calculator);
+    document.getElementById('piecharts').addEventListener('click', initPieChart);
+
     initAdvice();
 }
 
@@ -27,7 +29,6 @@ async function calculator(){
     await saveAll()
     await fetchEarnings(username)
     await fetchExpenses(username)
-    initPieChart() 
 }
 
 async function fetchAllInfo(){
