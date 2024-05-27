@@ -14,6 +14,7 @@ import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initBudget } from "./pages/budgetPage/budgetPage.js";
 import { initLogin, logout } from "./pages/loginPage/loginPage.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
+import { initMenu } from "./pages/menuPage/menuPage.js";
 
 let templates = {};
 
@@ -69,6 +70,7 @@ export async function starterRoutes(){
       },
       "/menu": () => {
         renderTemplate(templates.templateMenu, "content");
+        initMenu();
       },
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");

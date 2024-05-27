@@ -1,6 +1,6 @@
 #typewriter {
     font-family: monospace;
-    white-space: nowrap;
+    white-space: pre-wrap;
     overflow: hidden;
     border-right: 2px solid black;
     display: inline-block;

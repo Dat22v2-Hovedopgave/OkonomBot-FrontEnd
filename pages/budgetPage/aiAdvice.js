@@ -75,8 +75,8 @@ async function askGPT(userInfo){
 
       console.log("Svar fra gpt: ",response);
 
-      //typeOutResponse(response);
-      document.getElementById("advice-text").innerHTML = response.message;
+      typeOutResponse(response);
+      //document.getElementById("advice-text").innerHTML = response.message;
 
     } catch (error) {
       document.getElementById("error").innerText = error.message
@@ -88,15 +88,20 @@ function typeOutResponse(responseMessage) {
     const element = document.getElementById("advice-text"); // Target element
     const response = responseMessage.message; // Message to be typed out
 
-    console.log("response: ",response);
+    console.log("response: ", response);
 
-    element.textContent = ''; // Clear the element content
+    element.innerHTML = ''; // Clear the element content
     element.style.borderRight = '2px solid black'; // Add cursor
 
     let index = 0; // Initial index to start typing from
     const intervalId = setInterval(() => {
         if (index < response.length) {
-            element.textContent += response.charAt(index);
+            // Handle new lines and formatting
+            if (response.charAt(index) === '\n') {
+                element.innerHTML += '<br>';
+            } else {
+                element.innerHTML += response.charAt(index);
+            }
             index++;
         } else {
             clearInterval(intervalId);
