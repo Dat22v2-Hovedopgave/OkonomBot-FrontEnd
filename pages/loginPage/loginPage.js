@@ -45,7 +45,7 @@ async function connectLogin(){
 
       await roleHandler();
 
-      window.router.navigate("/about");
+      window.router.navigate("/menu");
     } catch (err) {
       document.getElementById("loginError").innerText = err.message
     }
@@ -62,5 +62,5 @@ async function connectLogin(){
 
       await roleHandler();
 
-      window.router.navigate("/about");
+      window.router.navigate("/menu");
     }

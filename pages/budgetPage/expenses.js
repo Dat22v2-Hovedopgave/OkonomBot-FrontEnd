@@ -51,7 +51,7 @@ function renderExpenses(expensesData) {
     for (let categoryName in categories) {
         htmlContent += `
         <div class="card text-bg-light mb-3" style="max-width: 30rem;">
-          <div class="card-header">${categoryName}</div>
+          <div class="card-header bg-danger text-light">${categoryName}</div>
           <div class="card-body">`;
 
         categories[categoryName].forEach(expense => {
@@ -76,7 +76,7 @@ function renderExpenses(expensesData) {
     expensesContainer.innerHTML = htmlContent;
 
     // Render category totals inside the card
-    let totalsHtmlContent = '<h5>Udgifter pr. kategori</h5><hr class="border border-danger border-3 opacity-75">';
+    let totalsHtmlContent = '<h5>Udgifter</h5><hr class="border border-danger border-3 opacity-75">';
     for (let categoryName in categoryTotals) {
         totalsHtmlContent += `<p>${categoryName}: ${categoryTotals[categoryName].toFixed(2)} kr.</p>`;
     }
@@ -112,8 +112,6 @@ async function fetchCategories() {
         const response = await fetch(URL + '/categories/', options);
         const categories = await handleHttpErrors(response);
         expenseCategories = categories.filter(category => category.type === 'expense');
-        fetchExpenses(username);
-
         console.log('Expense Categories:', expenseCategories);
 
     } catch (error) {
@@ -130,7 +128,6 @@ async function fetchExpenses(username) {
         fetchedExpenses = JSON.parse(JSON.stringify(result));
         console.log('Resulting response from fetchExpenses: ',result);
         renderExpenses(result);
-        //renderPieCharts();
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
     }
@@ -207,7 +204,7 @@ async function addSubcategory(button) {
         name: subcategoryName,
         username: username
     };
-    postSubcategory(subcategory);
+    await postSubcategory(subcategory);
     await saveAll();
 }
 

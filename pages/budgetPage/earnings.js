@@ -4,15 +4,12 @@ import { saveAll } from "./budgetPage.js";
 import { renderPieCharts } from "./pieChart.js";
 
 export let fetchedEarnings;
-
-let deletedEarningIds = [];
-var totalEarnings = 0;
 let earningsCategories = [];
 const username = getUserFromLocalStorage();
 
 export async function initEarnings() {
-    fetchEarnings(username);
-    fetchCategories();
+    await fetchCategories();
+    await fetchEarnings(username);
 }
 
 function getUserFromLocalStorage() {
@@ -66,7 +63,7 @@ function renderEarnings(earningsData) {
     for (let categoryName in categories) {
         htmlContent += `
         <div class="card text-bg-light mb-3" style="max-width: 30rem;">
-          <div class="card-header">${categoryName}</div>
+          <div class="card-header bg-success text-light">${categoryName}</div>
           <div class="card-body">`;
 
         categories[categoryName].forEach(earning => {
@@ -91,7 +88,7 @@ function renderEarnings(earningsData) {
     earningsContainer.innerHTML = htmlContent;
 
     // Render category totals inside the card
-    let totalsHtmlContent = '<h5>Indtægter pr. kategori</h5><hr class="border border-success border-3 opacity-75">';
+    let totalsHtmlContent = '<h5>Indtægter</h5><hr class="border border-success border-3 opacity-75">';
     for (let categoryName in categoryTotals) {
         totalsHtmlContent += `<p>${categoryName}: ${categoryTotals[categoryName].toFixed(2)} kr.</p>`;
     }
@@ -153,7 +150,7 @@ async function addCategory() {
         username: username
     };
 
-    postSubcategory(subcategory);
+    await postSubcategory(subcategory);
     await saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }

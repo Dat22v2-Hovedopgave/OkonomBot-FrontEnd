@@ -14,7 +14,7 @@ import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initBudget } from "./pages/budgetPage/budgetPage.js";
 import { initLogin, logout } from "./pages/loginPage/loginPage.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
-import { initAdvice } from "./pages/advicePage/advicePage.js";
+import { initMenu } from "./pages/menuPage/menuPage.js";
 
 let templates = {};
 
@@ -24,7 +24,7 @@ window.addEventListener("load", async () => {
   templates.templateBudget = await loadTemplate("./pages/budgetPage/budgetPage.html");
   templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html");
   templates.templateSignIn = await loadTemplate("./pages/signInPage/signInPage.html");
-  templates.templateAdvice = await loadTemplate("./pages/advicePage/advicePage.html");
+  templates.templateMenu = await loadTemplate("./pages/menuPage/menuPage.html");
 
   adjustForMissingHash();
 
@@ -68,6 +68,10 @@ export async function starterRoutes(){
         renderTemplate(templates.templateAbout, "content");
         testEverything();
       },
+      "/menu": () => {
+        renderTemplate(templates.templateMenu, "content");
+        initMenu();
+      },
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
@@ -105,7 +109,7 @@ async function userRoutes(){
   //Shows logout and budget, since role was found.
   document.getElementById("logout").style.display = "block";
   document.getElementById("budget").style.display = "block";
-  document.getElementById("advice").style.display = "block";
+
   window.router.on({
     "/logout": () => {
       logout();
@@ -113,10 +117,6 @@ async function userRoutes(){
     "/budget": () => {
       renderTemplate(templates.templateBudget, "content");
       initBudget();
-    },
-    "/advice": () => {
-      renderTemplate(templates.templateAdvice, "content");
-      initAdvice();
     }
   });
 }
@@ -126,9 +126,6 @@ async function anonymousRoutes(){
 
   document.getElementById("budget").style.display = "none";
   window.router.off("/budget");
-
-  document.getElementById("advice").style.display = "none";
-  window.router.off("/advice");
 
   document.getElementById("login").style.display = "block";
   document.getElementById("signIn").style.display = "block";
