@@ -1,6 +1,7 @@
 console.log("Trying to load signInPage!")
 import { makeOptions, handleHttpErrors } from "../../utils.js";
 import { LOCAL_API as API_URL } from "../../settings.js";
+import { login } from "../loginPage/loginPage.js";
 
 const URL = API_URL + "/users/createUser";
 
@@ -51,8 +52,11 @@ async function signUp(user) {
   try {
       await fetch(URL,options).then(handleHttpErrors)
       document.getElementById("sysmessage").innerHTML = "Konto oprettet."
-      document.querySelector("form").reset()
-      window.router.navigate("/about");
+      document.querySelector("form").reset();
+
+      await login(user);
+
+      //window.router.navigate("/menu");
   } catch (err) {
       document.getElementById("error").innerHTML = err
   }
