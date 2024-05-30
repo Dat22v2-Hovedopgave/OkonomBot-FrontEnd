@@ -32,7 +32,7 @@ function renderExpensesAndIncomePie(earnings,expenses){
 
     const dataPoints = [
         { label: "Udgifter", y: expensePercentage, color: "red" },
-        { label: "Overskud", y: incomePercentage, color: "green" }
+        { label: "Indtægter", y: incomePercentage, color: "green" }
     ];
 
     const chart = new CanvasJS.Chart("expensesAndRestPie", {
