@@ -19,7 +19,7 @@ async function listenLogin(evt) {
       connectLogin();
     } else {
       event.preventDefault();
-      alert('Please fill out all fields');
+      alert('Venligst udfyld alle felter');
     }
   });
 }
