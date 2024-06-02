@@ -12,7 +12,7 @@ export function initPieChart(){
 export function renderPieCharts(earnings,expenses){
 
     if(totalEarnings == 0 || totalExpenses == 0){
-        document.getElementById('diagramError').innerHTML = 'Venligst udfyld flere detaljer om budget for at kunne generére diagrammer.';
+        document.getElementById('diagramError').innerHTML = 'Venligst udfyld flere detaljer om budget for at kunne generere diagrammer.';
     } else {
         document.getElementById('diagramError').innerHTML = '';
 
