@@ -8,11 +8,11 @@ export let fetchedExpenses;
 
 var totalExpenses = 0;
 let expenseCategories = [];
-const username = getUserFromLocalStorage();
+//const username = getUserFromLocalStorage();
 
 export async function initExpenses() {
     await fetchCategories();
-    await fetchExpenses(username);
+    await fetchExpenses();
 }
 
 function getUserFromLocalStorage() {
@@ -119,7 +119,8 @@ async function fetchCategories() {
     }
 }
 
-async function fetchExpenses(username) {
+async function fetchExpenses() {
+    let username = getUserFromLocalStorage();
     try {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/expenses/user/' + username, options);
@@ -134,6 +135,7 @@ async function fetchExpenses(username) {
 }
 
 export async function saveAllExpenses() {
+    let username = getUserFromLocalStorage();
     const expensesInput = document.querySelectorAll('[id^="subcatexpense-"]');
     const expenses = Array.from(expensesInput).map(input => ({
         username: username,
@@ -148,7 +150,7 @@ export async function saveAllExpenses() {
         const response = await fetch(URL + '/expenses/addExpenses', options);
         const result = await handleHttpErrors(response);
         console.log('Expenses saved successfully:', result);
-        fetchExpenses(username);
+        fetchExpenses();
     } catch (error) {
         console.error('There was a problem saving expenses:', error);
     }
@@ -165,11 +167,12 @@ async function deleteExpenses(expensesId) {
     } catch (error) {
         console.error('There was a problem deleting the expense:', error);
     }
-    fetchExpenses(username);
+    fetchExpenses();
 
 }
 
 async function addCategory() {
+    let username = getUserFromLocalStorage();
     const categorySelect = document.getElementById('expenseCategorySelect');
     const categoryId = categorySelect.value;
 
@@ -190,6 +193,7 @@ async function addCategory() {
 }
 
 async function addSubcategory(button) {
+    let username = getUserFromLocalStorage();
     const subcategoryInput = button.previousElementSibling;
     const categoryId = subcategoryInput.dataset.categoryId;
     const subcategoryName = subcategoryInput.value.trim();

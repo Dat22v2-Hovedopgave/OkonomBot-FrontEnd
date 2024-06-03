@@ -14,8 +14,8 @@ export async function initBudget() {
 
     await fetchAllInfo();
 
-    fetchEarnings(username); //???
-    fetchExpenses(username); //???
+    fetchEarnings(); //???
+    fetchExpenses(); //???
 
     document.getElementById('save-all-button').addEventListener('click', calculator);
 
@@ -23,11 +23,12 @@ export async function initBudget() {
 }
 
 async function calculator(){
-    await saveAll()
-    await fetchEarnings(username)
-    await fetchExpenses(username)
-    initPieChart()
-}
+        await saveAll()
+        await fetchEarnings()
+        await fetchExpenses()
+        initPieChart()
+    }
+
 
 async function fetchAllInfo(){
     await Promise.all([
@@ -36,14 +37,12 @@ async function fetchAllInfo(){
     ]);
 }
 
-
-const username = getUserFromLocalStorage();
-
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
 }
 
-async function fetchEarnings(username) {
+async function fetchEarnings() {
+    let username = getUserFromLocalStorage();
     try {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/earnings/user/' + username, options);
@@ -75,7 +74,8 @@ function renderEarnings(earnings) {
     updateTotalBudget();
 }
 
-async function fetchExpenses(username) {
+async function fetchExpenses() {
+    let username = getUserFromLocalStorage();
     try {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/expenses/user/' + username, options);

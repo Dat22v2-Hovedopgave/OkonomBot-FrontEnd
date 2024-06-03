@@ -1,4 +1,5 @@
 export function initMenu(){
+
     console.log("hello from initMenu");
 
     document.getElementById("tryCalculator").addEventListener("click", function() {

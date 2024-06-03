@@ -19,38 +19,47 @@ async function listenLogin(evt) {
       connectLogin();
     } else {
       event.preventDefault();
-      alert('Please fill out all fields');
+      alert('Venligst udfyld alle felter');
     }
   });
 }
 
 async function connectLogin(){
     //Added DOMPurify.sanitize to add security. With this we prevent cross-site scripting (XSS) attacks and other types of malicious code injection.
-    const username = DOMPurify.sanitize(document.getElementById("username").value)
-    const password = DOMPurify.sanitize(document.getElementById("password").value)
-  
-    const userDto = { "username":username, "password":password };
-    
-    console.log(userDto);
-  
-    const options = makeOptions("POST",userDto,false);
-  
-    try {
-      const response = await fetch(URL, options).then(res=>handleHttpErrors(res));
-      localStorage.setItem("user",response.username);
-      localStorage.setItem("token",response.token);
-      localStorage.setItem("roles",response.roles);
-  
-      console.log(response);
-
-      await roleHandler();
-
-      window.router.navigate("/menu");
-    } catch (err) {
-      document.getElementById("loginError").innerText = err.message
+    const loginInfo = {
+      "username" : DOMPurify.sanitize(document.getElementById("username").value),
+      "password" : DOMPurify.sanitize(document.getElementById("password").value)
     }
+    
+    login(loginInfo);
 
   }
+
+    export async function login(loginInfo){
+
+      const userDto = { "username":loginInfo.username, "password":loginInfo.password };
+    
+      console.log(userDto);
+    
+      const options = makeOptions("POST",userDto,false);
+    
+      try {
+        const response = await fetch(URL, options).then(res=>handleHttpErrors(res));
+        localStorage.setItem("user",response.username);
+        localStorage.setItem("token",response.token);
+        localStorage.setItem("roles",response.roles);
+    
+        console.log(response);
+  
+        await roleHandler();
+  
+        window.router.navigate("/menu");
+      } catch (err) {
+        document.getElementById("loginError").innerHTML = err.message;
+      }
+  
+    }
+
     export async function logout(){
       document.getElementById("login").style.display="block"
       document.getElementById("signIn").style.display="block"
