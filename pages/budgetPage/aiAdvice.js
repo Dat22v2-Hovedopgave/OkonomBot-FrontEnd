@@ -1,5 +1,6 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors } from "../../utils.js";
+import { totalEarnings, totalExpenses } from "./budgetPage.js";
 
 export async function initAdvice(){
     console.log('==>> advicePage.js Hello from here');
@@ -13,8 +14,12 @@ async function setupAdviceButton(){
     const button = document.getElementById('getAdviceButton');
 
     button.addEventListener('click', async function(event) {
+        if(totalEarnings == 0 || totalExpenses == 0){
+            document.getElementById('aiError').innerHTML = 'Udfyld venligst flere detaljer om dit budget for at bruge AI assistance.';
+        } else {
+            document.getElementById('aiError').innerHTML = '';
 
-        document.getElementById("advice-text").innerHTML = 'Tænker . . .';
+            document.getElementById("advice-text").innerHTML = 'Tænker . . .';
 
         if(username){
             try {
@@ -28,8 +33,10 @@ async function setupAdviceButton(){
             console.error('Username could not be found.');
             alert("Please log in to get advice.");
         }
+        }
     });
 }
+
 async function getUserEcoInfo(username){
 
     const expenses = await fetchExpenses(username);

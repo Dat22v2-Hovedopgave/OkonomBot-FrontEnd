@@ -5,11 +5,11 @@ import { renderPieCharts } from "./pieChart.js";
 
 export let fetchedEarnings;
 let earningsCategories = [];
-const username = getUserFromLocalStorage();
+//const username = getUserFromLocalStorage();
 
 export async function initEarnings() {
     await fetchCategories();
-    await fetchEarnings(username);
+    await fetchEarnings();
 }
 
 function getUserFromLocalStorage() {
@@ -98,7 +98,8 @@ function renderEarnings(earningsData) {
 }
 
 
-async function fetchEarnings(username) {
+async function fetchEarnings() {
+    let username = getUserFromLocalStorage();
     try {
         const options = makeOptions("GET", '', false);
         const response = await fetch(URL + '/earnings/user/' + username, options);
@@ -115,6 +116,7 @@ async function fetchEarnings(username) {
 }
 
 export async function saveAllEarnings() {
+    let username = getUserFromLocalStorage();
     const earningsInputs = document.querySelectorAll('[id^="subcatEarning-"]');
     const earnings = Array.from(earningsInputs).map(input => ({
         username: username,
@@ -129,13 +131,14 @@ export async function saveAllEarnings() {
         const response = await fetch(URL + '/earnings/addEarnings', options);
         const result = await handleHttpErrors(response);
         console.log('Earnings saved successfully:', result);
-        fetchEarnings(username);
+        fetchEarnings();
     } catch (error) {
         console.error('There was a problem saving earnings:', error);
     }
 }
 
 async function addCategory() {
+    let username = getUserFromLocalStorage();
     const categorySelect = document.getElementById('earningCategorySelect');
     const categoryId = categorySelect.value;
 
@@ -156,6 +159,7 @@ async function addCategory() {
 }
 
 async function addSubcategory(button) {
+    let username = getUserFromLocalStorage();
     const subcategoryInput = button.previousElementSibling;
     const categoryId = subcategoryInput.dataset.categoryId;
     const subcategoryName = subcategoryInput.value.trim();
@@ -197,7 +201,7 @@ async function deleteEarning(earningId) {
     } catch (error) {
         console.error('There was a problem deleting the earning:', error);
     }
-    fetchEarnings(username);
+    fetchEarnings();
 
 }
 
