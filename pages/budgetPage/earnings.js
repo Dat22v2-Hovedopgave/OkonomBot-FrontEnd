@@ -1,7 +1,6 @@
 import { LOCAL_API as URL } from "../../settings.js";
 import { makeOptions, handleHttpErrors, renderTemplate } from "../../utils.js";
-import { saveAll } from "./budgetPage.js";
-import { renderPieCharts } from "./pieChart.js";
+import { purifyDOM, saveAll } from "./budgetPage.js";
 
 export let fetchedEarnings;
 let earningsCategories = [];
@@ -162,7 +161,7 @@ async function addSubcategory(button) {
     let username = getUserFromLocalStorage();
     const subcategoryInput = button.previousElementSibling;
     const categoryId = subcategoryInput.dataset.categoryId;
-    const subcategoryName = subcategoryInput.value.trim();
+    const subcategoryName = purifyDOM(subcategoryInput.value.trim());
 
     if (!categoryId || !subcategoryName) {
         console.error('Category ID or subcategory name is missing.');
