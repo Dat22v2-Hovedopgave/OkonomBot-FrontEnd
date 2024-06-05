@@ -8,17 +8,30 @@ body {
 .navbar {
   background-color: #a5abb1; /* Custom background color */
   width: auto; /* Ensure navbar does not fill the entire screen width */
-  max-width: 80%; /* Adjust the max-width as needed */
+  max-width: 90%; /* Adjust the max-width as needed */
   margin: 0 auto; /* Center the navbar */
   border-radius: 8px; /* Add some rounded corners for a nicer look */
-  padding: 10px 20px; /* Add some padding for better spacing */
+  padding: 5px 20px; /* Add some padding for better spacing */
+  position: relative; /* Establish positioning context */
+  overflow: visible; /* Allow children to render outside the box */
 }
 
-.navbar-brand, .nav-link {
-  color: #ffffff !important; /* White text color */
+.navbar-brand {
+  position: relative; /* Relative positioning to manage overflow */
+  overflow: visible; /* Ensure the image can display outside the bounds */
+  height: 50px; /* Fixed height to ensure navbar size remains constant */
+}
+
+.menu-logo {
+  height: 120px; /* Larger height for the image */
+  position: absolute; /* Position absolutely to allow out-of-bounds rendering */
+  top: 50%; /* Center vertically relative to the navbar-brand */
+  left: 50%; /* Center horizontally */
+  transform: translate(-20%, -42%); /* Adjust to perfectly center */
 }
 
 .nav-link {
+  color: #ffffff !important; /* White text color */
   margin-right: 15px; /* Space between nav links */
   transition: color 0.3s;
 }
@@ -26,6 +39,7 @@ body {
 .nav-link:hover {
   color: #b3d7ff !important; /* Lighter blue on hover */
 }
+
 
 .navbar-toggler {
   border: none; /* Remove border from toggle button */
