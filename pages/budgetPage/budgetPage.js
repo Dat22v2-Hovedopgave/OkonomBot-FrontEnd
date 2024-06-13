@@ -145,3 +145,13 @@ function showToast() {
     toast.show();
 }
 
+export function purifyDOM(htmlInput){
+
+    let result = DOMPurify.sanitize(htmlInput,{
+        ALLOWED_TAGS: [], // No tags allowed
+        ALLOWED_ATTR: []  // No attributes allowed
+    });
+    
+    return result;
+}
+
