@@ -37,37 +37,76 @@ async function setupAdviceButton(){
     });
 }
 
-async function getUserEcoInfo(username){
-
+async function getUserEcoInfo(username) {
     const expenses = await fetchExpenses(username);
     const earnings = await fetchEarnings(username);
 
-    console.log('Expenses for ',username,'. ',expenses);
-    console.log('Earnings for ',username,'. ',earnings);
+    console.log('Expenses for ', username, '. ', expenses);
+    console.log('Earnings for ', username, '. ', earnings);
 
     let sendInfo = formatTransactions(earnings, expenses);
 
     return sendInfo;
 }
 
+
+
+
+
 function formatTransactions(earnings, expenses) {
-    let result = "Earnings:";
+    let result = {
+        Indtægter: {},
+        Udgifter: {},
+        totals: {
+            totalIndtægt: 0, // Total income
+            totalUdgift: 0,   // Total expense
+            overskud: 0       // Surplus/deficit
+        }
+    };
 
     // Process earnings - these will have positive amounts
     for (const earning of earnings) {
-        result += `Kategori:${earning.categoryName}; Underkategori:${earning.subcategoryName}:${earning.amount};`;
-    }
+        if (!result.Indtægter[earning.categoryName]) {
+            result.Indtægter[earning.categoryName] = {};
+        }
+        result.Indtægter[earning.categoryName][earning.subcategoryName] = earning.amount;
 
-    // Start the expenses section
-    result += "Expenses:";
+        if (!result.totals.earnings) {
+            result.totals.earnings = {};
+        }
+        if (!result.totals.earnings[earning.categoryName]) {
+            result.totals.earnings[earning.categoryName] = 0;
+        }
+        result.totals.earnings[earning.categoryName] += earning.amount;
+        result.totals.totalIndtægt += earning.amount; // Add to total income
+    }
 
     // Process expenses - these need to be shown with negative amounts
     for (const expense of expenses) {
-        result += `Kategori:${expense.categoryName}; Underkategori:${expense.subcategoryName}:-${expense.amount};`;
+        if (!result.Udgifter[expense.categoryName]) {
+            result.Udgifter[expense.categoryName] = {};
+        }
+        result.Udgifter[expense.categoryName][expense.subcategoryName] = -expense.amount;
+
+        if (!result.totals.expenses) {
+            result.totals.expenses = {};
+        }
+        if (!result.totals.expenses[expense.categoryName]) {
+            result.totals.expenses[expense.categoryName] = 0;
+        }
+        result.totals.expenses[expense.categoryName] += expense.amount;
+        result.totals.totalUdgift += expense.amount; // Add to total expense
     }
 
-    return result;
+    // Calculate surplus or deficit
+    result.totals.overskud = result.totals.totalIndtægt + result.totals.totalUdgift;
+
+    return JSON.stringify(result, null, 2); // Format as JSON string with indentation
 }
+
+
+
+
 
 
 
