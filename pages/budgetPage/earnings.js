@@ -4,24 +4,27 @@ import { purifyDOM, saveAll } from "./budgetPage.js";
 
 export let fetchedEarnings;
 let earningsCategories = [];
-//const username = getUserFromLocalStorage();
 
+// Initialiserer indtægter
 export async function initEarnings() {
     await fetchCategories();
     await fetchEarnings();
 }
 
+// Henter brugernavn fra local storage
 function getUserFromLocalStorage() {
     return localStorage.getItem('user');
 }
 
+// Henter kategorier fra API
 async function fetchCategories() {
     const options = makeOptions("GET", '', false);
 
     try {
         const response = await fetch(URL + '/categories/', options);
         const categories = await handleHttpErrors(response);
-        earningsCategories = categories.filter(category => category.type === 'earning');
+        earningsCategories = categories.filter(category => category.type === 'earning');// Filtrerer kun de kategorier, der er indtægter
+
 
         console.log('Earnings Categories:', earningsCategories);
 
@@ -30,21 +33,28 @@ async function fetchCategories() {
     }
 }
 
+// udskriver indtægter på siden
 function renderEarnings(earningsData) {
     const earningsContainer = document.getElementById('earnings-category');
     const earningsTotalsContainer = document.getElementById('earnings-category-totals');
     let categories = {};
     let categoryTotals = {};
-
-    // Group earnings by category
+    
+    // Grupperer indtægter efter kategori
     earningsData.forEach(earning => {
+        // Hvis kategorien ikke allerede findes i objektet 'categories', så oprettes en ny array for denne kategori
         if (!categories[earning.categoryName]) {
             categories[earning.categoryName] = [];
+            // Initialiserer summen for kategorien i objektet 'categoryTotals'
             categoryTotals[earning.categoryName] = 0;
         }
+        // Tilføjer indtægten til den relevante kategori
         categories[earning.categoryName].push(earning);
+        // Lægger indtægtens beløb til summen for kategorien
         categoryTotals[earning.categoryName] += earning.amount;
     });
+
+
 
     let htmlContent = '';
 
@@ -58,7 +68,7 @@ function renderEarnings(earningsData) {
     <button class="btn btn-outline-secondary" type="button" id="create-earning-category-button">Tilføj Kategori</button>
     </div>`;
 
-    // Build HTML content for each category inside a card
+    // Bygger HTML-indhold for hver kategori inde i et kort
     for (let categoryName in categories) {
         htmlContent += `
         <div class="card text-bg-light mb-3" style="max-width: 30rem;">
@@ -74,7 +84,7 @@ function renderEarnings(earningsData) {
               <button class="btn btn-outline-secondary btn-outline-danger" type="button" id="deleteEarning-${earning.earningId}">Slet</button>
             </div>`;
         });
-
+        //Tilføjer et input felt for at tilføje en indtægt, som en underkateogr
         htmlContent += `
             <div class="input-group mb-3">
               <input type="text" class="form-control" placeholder="indtægt kategori..." aria-describedby="add-subcategoryEarning" data-category-id="${categories[categoryName][0].categoryId}">
@@ -86,7 +96,7 @@ function renderEarnings(earningsData) {
 
     earningsContainer.innerHTML = htmlContent;
 
-    // Render category totals inside the card
+    // Viser samlede total for kategoroer inde i kortet til højre
     let totalsHtmlContent = '<h5>Indtægter</h5><hr class="border border-success border-3 opacity-75">';
     for (let categoryName in categoryTotals) {
         totalsHtmlContent += `<p>${categoryName}: ${categoryTotals[categoryName].toFixed(2)} kr.</p>`;
@@ -96,7 +106,7 @@ function renderEarnings(earningsData) {
     attachEventListeners();
 }
 
-
+// Henter indtægter fra API
 async function fetchEarnings() {
     let username = getUserFromLocalStorage();
     try {
@@ -104,23 +114,26 @@ async function fetchEarnings() {
         const response = await fetch(URL + '/earnings/user/' + username, options);
         const result = await handleHttpErrors(response);
 
-        fetchedEarnings = JSON.parse(JSON.stringify(result)); //Only way to make a copy of the object instead of referring to it.
-        console.log('Resulting response from fetchEarnings: ',result);
+        fetchedEarnings = JSON.parse(JSON.stringify(result)); //Den eneste måde at lave en kopi af objektet i stedet for at henvise til det.
+        console.log('Resulting response from fetchEarnings: ', result);
         renderEarnings(result);
-        //renderPieCharts();
-        
+
     } catch (error) {
         console.error("There was a problem with the fetch operation: " + error.message);
     }
 }
 
+// Gemmer alle indtægter
 export async function saveAllEarnings() {
     let username = getUserFromLocalStorage();
+    // Finder alle input-felter, der har et "id", der starter med "subcatEarning-"
     const earningsInputs = document.querySelectorAll('[id^="subcatEarning-"]');
+
+    // Konverterer NodeList til array og mapper hvert input-felt til et objekt
     const earnings = Array.from(earningsInputs).map(input => ({
         username: username,
         subcategoryId: input.id.split('-')[1],
-        amount: parseFloat(input.value)
+        amount: parseFloat(input.value) //Hvis strengen indeholder gyldige numeriske tegn, returnerer parseFloat det tilsvarende tal
     }));
 
     console.log('Saving all earnings by subcategory:', earnings);
@@ -136,47 +149,65 @@ export async function saveAllEarnings() {
     }
 }
 
+// Tilføjer en kategori
 async function addCategory() {
     let username = getUserFromLocalStorage();
+    
+    // Henter det valgte kategori-id fra dropdown-menuen
     const categorySelect = document.getElementById('earningCategorySelect');
     const categoryId = categorySelect.value;
 
+    // Hvis ingen kategori er valgt, logges en fejlbesked og funktionen afsluttes
     if (!categoryId) {
         console.error('No category selected.');
         return;
     }
 
+    // Opretter et objekt for en ny underkategori med standardnavnet 'Diverse'
     const subcategory = {
         categoryId: categoryId,
         name: 'Diverse',
         username: username
     };
 
+    // Sender den nye underkategori til serveren
     await postSubcategory(subcategory);
+    // Gemmer alle ændringer
     await saveAll();
     console.log(`Attempting to add a default subcategory to category ID: ${categoryId}`);
 }
 
+// Tilføjer en underkategori
 async function addSubcategory(button) {
     let username = getUserFromLocalStorage();
-    const subcategoryInput = button.previousElementSibling;
-    const categoryId = subcategoryInput.dataset.categoryId;
-    const subcategoryName = purifyDOM(subcategoryInput.value.trim());
 
+    // Finder input-feltet for underkategori ved at tage det foregående søskende element af knappen
+    const subcategoryInput = button.previousElementSibling;
+    // Henter kategori-id fra data-attributten på input-feltet
+    const categoryId = subcategoryInput.dataset.categoryId;
+    //Puryfier input og henter input
+    const subcategoryName = purifyDOM(subcategoryInput.value.trim());//trim fjerner unødvendige tegn, som mellemrum
+
+    // Tjekker om enten kategori-id eller underkategorinavn mangler
     if (!categoryId || !subcategoryName) {
         console.error('Category ID or subcategory name is missing.');
         return;
     }
 
+    // Opretter et objekt for den nye underkategori
     const subcategory = {
         categoryId: categoryId,
         name: subcategoryName,
         username: username
     };
-    postSubcategory(subcategory);
+    // Sender den nye underkategori til serveren
+    await postSubcategory(subcategory);
+    // Gemmer alle ændringer
     await saveAll();
 }
 
+
+// Sender en underkategori til API
 async function postSubcategory(subcategory) {
     const options = makeOptions("POST", subcategory, false);
     try {
@@ -189,10 +220,14 @@ async function postSubcategory(subcategory) {
     console.log('Adding subcategory:', subcategory.name, 'to category ID:', subcategory.categoryId);
 }
 
+// Sletter en indtægt
 async function deleteEarning(earningId) {
+    // Gemmer alle ændringer før sletning
     await saveAll();
     console.log('Deleting earning with earnings ID:', earningId);
+    
     const options = makeOptions("DELETE", '', false);
+    
     try {
         const response = await fetch(URL + '/earnings/' + earningId, options);
         const result = await handleHttpErrors(response);
@@ -200,26 +235,32 @@ async function deleteEarning(earningId) {
     } catch (error) {
         console.error('There was a problem deleting the earning:', error);
     }
+    // Henter opdaterede indtægter fra serveren
     fetchEarnings();
-
 }
 
+
+// Tilføjer event listeners
 function attachEventListeners() {
+    // Finder knappen til at tilføje en ny kategori og tilføjer en klik-begivenhedshåndterer
     const addCategoryButton = document.getElementById('create-earning-category-button');
     addCategoryButton.addEventListener('click', addCategory);
 
+    // Finder alle knapper til at tilføje en ny underkategori og tilføjer en event-listener til hver
     const addSubcategoryButtons = document.querySelectorAll('.add-subcategoryEarning');
     addSubcategoryButtons.forEach(button => {
         button.addEventListener('click', function () {
-            addSubcategory(this);
+            addSubcategory(this); // this refererer til den aktuelle knap
         });
     });
 
-    const deleteButtons = document.querySelectorAll('[id^="deleteEarning-"]');
+    // Finder alle knapper til at slette en indtægt og tilføjer en event-listener til hver
+    const deleteButtons = document.querySelectorAll('[id^="deleteEarning-"]'); // Finder alle knapper, der har et id, der starter med "deleteEarning-"
+
     deleteButtons.forEach(button => {
         button.addEventListener('click', function () {
-            deleteEarning(this.id.split('-')[1]);
-        });
+            deleteEarning(this.id.split('-')[1]); // this refererer til den aktuelle knap, og split deler id'et for at få earningId
+        });                                      // id="deleteEarning-1" bliver til ["deleteEarning", "1"]
     });
 }
 

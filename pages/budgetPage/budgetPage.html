@@ -34,36 +34,43 @@
             <h2 class="card-title" style="color: #ff6f00">Månedens budget</h2>
             <div class="d-flex justify-content-between py-3">
               <span>Samlet Månedlig Indkomst</span>
+              <!-- Viser samlede indtægter -->
               <span id="total-earnings">0.00 kr.</span>
             </div>
             <div class="d-flex justify-content-between py-3">
               <span>Samlede Månedlige Udgifter</span>
+              <!-- Viser samlede udgifter -->
               <span id="total-expenses">0.00 kr.</span>
             </div>
 
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex justify-content-between py-3">
+                  <!-- Viser total for indtægtskategorier -->
                   <span id="earnings-category-totals">0.00 kr.</span>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="d-flex justify-content-between py-3">
+                  <!-- Viser total for udgiftskategorier -->
                   <span id="expenses-category-totals">0.00 kr.</span>
                 </div>
               </div>
             </div>
             <hr>
           </div>
+          <!-- Viser overskud / underskud -->
           <div id="card-total-budget" class="card-footer bg-success text-white">
             <span>Overskud / Underskud</span>
             <div class="font-weight-bold" id="total-budget">0.00 kr.</div>
           </div>
         </div>
         <div class="d-flex justify-content-center">
+          <!-- Knap til at gemme og beregne -->
           <button id="save-all-button" class="btn btn-primary btn-lg btn-block mt-3" style="max-width: 300px;">Gem og Beregn</button>
         </div>
         <div>
+          <!-- Viser fejlmeddelelser for diagram -->
           <p id="diagramError" class="text-danger mt-3"></p>
         </div>
 
@@ -73,9 +80,11 @@
             <div class="container">
               <div class="row">
                 <div class="col-md-6">
+                  <!-- Diagram for udgifter og rester -->
                   <div id="expensesAndRestPie" style="height: 300px; width: 100%;"></div>
                 </div>
                 <div class="col-md-6">
+                  <!-- Diagram for alle udgifter -->
                   <div id="entireExpensesPie" style="height: 300px; width: 100%;"></div>
                 </div>
               </div>
@@ -93,12 +102,15 @@
             </div>
             <div class="col-md-12">
               <div class="advice-box mt-3">
+                <!-- Tekst for rådgivning -->
                 <span id="advice-text">Tryk på knappen for neden for økonomisk rådgivning. Jeg vil prøve mit bedste...</span>
               </div>
               <div class="d-flex justify-content-center">
+                <!-- Knap til at få rådgivning -->
                 <button id="getAdviceButton" class="btn btn-primary mt-3" style="max-width: 300px;">Få rådgivning</button>
               </div>
               <div>
+                <!-- Viser fejlmeddelelser for AI rådgivning -->
                 <p id="aiError" class="text-danger mt-3"></p>
               </div>
             </div>
